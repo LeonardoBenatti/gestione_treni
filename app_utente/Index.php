@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +15,7 @@
 
             <div class="input-box">
                 <label>Email</label>
-                <input type="text" name="email">
+                <input type="text" name="email" value = <?php if(isset($_POST["email"])){echo $_POST["email"];} ?>>
             </div>
             <div class="input-box">
                 <label>Password</label>
@@ -22,10 +23,10 @@
             </div>
 
             <div class="input-box" style = "text-transform: uppercase;">
-                <a href = "registrazione.php">non sei registrato? registrati</label>
+                <a href = "login_utente/registrazione.php">non sei registrato? registrati</label>
             </div>
 
-            <button id="login-button" type="submit" name = "login">Login</button>
+            <input id="login-button" type="submit" name = "login" value = "Login">
         </form>
     </div>
 </div>
