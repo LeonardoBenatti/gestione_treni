@@ -1,0 +1,316 @@
+body{
+    align-items: center;
+    color: rgb(7, 0, 58);
+}
+
+.titolo{
+    font-size: 6vh;
+    display: flex;
+    justify-content: center;
+    text-transform: uppercase;
+    width: 100%;
+}
+
+.sottotitolo{
+    display: flex;
+    justify-content: center;
+    text-transform: uppercase;
+    width: 100%;
+    margin-top: 4vh; 
+}
+
+.in_fila{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;  
+    margin-top: 2vh;  
+}
+
+.car {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    margin: 0 5px; 
+    font-size: 3vh;
+    
+}
+
+button.car{
+    padding: 1.5vh;
+    background-color: rgb(214, 214, 214);
+    border-radius: 2vh;
+    border:none;
+    transition: outline 0.1s ease;
+    transition: box-shadow 0.1s ease;
+    
+}
+
+button.car:hover{
+    background-color: rgb(240, 239, 239);
+    outline: solid black 1px;
+    box-shadow: 0px 0px 5px 2px black;    
+}
+
+.img_carrello {
+    width: 10vh;
+    height: 10vh;
+}
+
+.b_href_contenitore{
+    margin-top: 8vh;
+    display: flex;
+    flex-direction: column;
+    height: 3vh;
+    align-items: center;  
+    font-size: 3vh;
+    border-radius: 2vh;
+}
+
+.b_href{
+    height: 30vh;
+    width: 50vh;
+    align-items: center;  
+    text-decoration: none;
+    padding: 1vh;
+    color: black;
+    font-size: 3vh;
+    font-weight: bolder;
+    background-color: rgb(214, 214, 214);
+    border-radius: 2vh;
+    border: solid, black, 1px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    transition: outline 0.1s ease;
+    transition: box-shadow 0.1s ease;
+}
+
+.b_href:hover{
+    background-color: rgb(240, 239, 239);
+    outline: solid black 1px;
+    box-shadow: 0px 0px 5px 2px black;    
+}
+
+.valore_car{
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    margin: 0 5px; 
+    font-size: 3vh;
+    margin-top: 1vh     ;
+}
+
+input.valore_car{
+    text-align: center;
+    width: 10vh;
+    outline: black solid 2px;
+    padding-right: -40px;
+    transition: outline 0.1s ease;
+    transition: box-shadow 0.1s ease;
+}
+
+input.valore_car[type="number"]::-webkit-inner-spin-button,
+input.valore_car[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.valore_car:hover{
+    outline: solid black 1px;
+    box-shadow: 0px 0px 5px 1px black;
+}
+
+.aggiorna{
+    width: 15vh;
+    height: 6vh;
+    padding: 1.5vh;
+    font-size: 3vh;
+    background-color: rgb(214, 214, 214);
+    border-radius: 1vh;
+    border:none;
+    transition: outline 0.1s ease;
+    transition: box-shadow 0.1s ease;
+}
+
+.aggiorna:hover{
+    background-color: rgb(240, 239, 239);
+    outline: solid black 1px;
+    box-shadow: 0px 0px 5px 2px black;}
+
+.back{
+    position: fixed;
+    top: 2vh; 
+    left: 2vh; 
+    height: 8vh;
+    width: 5vh;
+    align-items: center;  
+    text-decoration: none;
+    padding: 2vh;
+    color: black;
+    font-size: 2vh;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+}
+
+.back:hover{
+    text-decoration: underline;
+    text-decoration-thickness: 0.3vh;
+}
+
+.logout {
+    position: fixed;
+    top: 1vh; 
+    right: 1vh; 
+    height: 8vh;
+    width: 5vh;
+    align-items: center;  
+    text-decoration: none;
+    padding: 2vh;
+    color: black;
+    font-size: 2vh;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.logout:hover{
+    text-decoration: underline;
+    text-decoration-thickness: 0.3vh;
+}
+
+#f{
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    outline: solid 4px black;
+    border-radius: 2vh;
+    padding: 2vh;
+}
+
+.data_input::-webkit-calendar-picker-indicator {
+    position: absolute;
+    z-index:10;
+    width: 23vh;
+    height: 10vh;
+    opacity: 0;
+}
+
+.data_input {
+    width: 18vh;
+    height: 8vh;
+    font-size: 3vh;
+    font-weight: 600;
+    border: none;
+    outline: 2px black solid;
+    border-radius: 1vh;
+    transition: outline 0.1s ease;
+    transition: box-shadow 0.1s ease;
+}
+
+.data_input:hover {
+    outline: solid black 2px;
+    box-shadow: 0px 0px 5px 2px black;
+}
+
+#pulsanti_scorrimento{
+    display:flex;
+    flex-direction:row;
+    justify-content : center;
+}
+
+
+table {
+    border-collapse: collapse;
+    width: 70%;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 10px;
+    text-align: center;
+    height:5vh;
+    font-weight:700;
+}
+.red{
+    display:flex;
+    justify-content:center;
+    background-color:red;
+}
+.green{
+    display:flex;
+    justify-content:center;
+    background-color:green;
+}
+.normale{
+    display:flex;
+    justify-content:center;
+    background-color: rgb(224, 224, 224);
+}
+.prenotabili{
+    cursor: pointer;
+    width: 120%;
+    height: 120%;
+    background-color: rgba(0, 0, 0, 0);
+    border:none;
+    font-weight:700;
+    font-size:3vh;
+    color:white;
+}
+
+.r{
+    display:flex;
+    justify-content:center;
+}
+
+td{
+    font-weight: 700;
+}
+
+
+#table_o_a{
+    border-collapse: collapse;
+    width: 193vh;;
+}
+
+
+:root {
+  --background: #181825;
+  --background-element: #1e1e2e;
+  --accent: #b4befe;
+  --accent-hover: #a3a9c4;
+  --accent-active: #8b8f9e;
+  --accent-text-hover: #1e1e2e;
+  --accent-text-active: #1e1e2e;
+  --warning: #fab387;
+  --warning-hover: #f9e2af;
+  --warning-active: #f7a877;
+  --warning-text: #1e1e2e;
+  --warning-text-hover: #1e1e2e;
+  --warning-text-active: #1e1e2e;
+  --error: #f38ba8;
+  --error-hover: #e97d94;
+  --error-active: #d96e84;
+  --error-text: #1e1e2e;
+  --error-text-hover: #1e1e2e;
+  --error-text-active: #1e1e2e;
+  --success: #a2f29f;
+  --success-hover: #8de78b;
+  --success-active: #7ad277;
+  --success-text: #1e1e2e;
+  --success-text-hover: #1e1e2e;
+  --success-text-active: #1e1e2e;
+  --info: #b4befe;
+  --info-hover: #a3a9c4;
+  --info-active: #8b8f9e;
+  --info-text: #1e1e2e;
+  --info-text-hover: #1e1e2e;
+  --info-text-active: #1e1e2e;
+  --transition-time: .35s;
+}

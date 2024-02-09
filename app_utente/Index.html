@@ -1,8 +1,3 @@
-<?php
-    session_start();
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 </head>
-<link rel="stylesheet" href="stylesheets/login.css">
+<link rel="stylesheet" href="../stylesheets/login.css">
 <body>
 <div class="container">
     <div class="login-box">
         <h2>Login</h2>
-        <form action="login/check.php" method="post">
-            <select></select>
+        <form action="login_utente/check.php" method="post">
+
             <div class="input-box">
                 <label>Email</label>
                 <input type="text" name="email">
@@ -26,17 +21,14 @@
                 <input type="password" name="password">
             </div>
 
-            <button id="login-button" type="submit">Login</button>
+            <div class="input-box" style = "text-transform: uppercase;">
+                <a href = "registrazione.php">non sei registrato? registrati</label>
+            </div>
+
+            <button id="login-button" type="submit" name = "login">Login</button>
         </form>
     </div>
 </div>
-
-
-<style>
-
-
-
-</style>
 
 </body>
 </html>
