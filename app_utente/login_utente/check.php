@@ -32,7 +32,6 @@
                 echo "<form action = '../index.php' method = 'post' id = 'send'>                  
                         <input type = 'hidden' name = 'email' value = '" . $_POST['email'] . "'>
                     </form>";                                                                                 //SE L'UTENTE ESISTE GIA MANDA AL LOGIN CON L'EMAIL GIà INSERITA
-        
             }
         }
         else{                       //SE NON TUTTI I CAMPI DEL FORM SONO PIENI
@@ -80,7 +79,7 @@
                 //echo $_SESSION["logged_email"];
                 header("Location: ....");
             }
-            else{                                                     //SE L'UTENTE ESISTE E LA PASSWORD è SBAGLIATA SI MANDA AL LOGIN L'EMAIL CHE ANDRà RISCRITTA E LA PASSWORD VUOTA
+            else{                                                    //SE L'UTENTE ESISTE E LA PASSWORD è SBAGLIATA SI MANDA AL LOGIN L'EMAIL CHE ANDRà RISCRITTA E LA PASSWORD VUOTA
                 if($_POST['password'] != ""){$_POST['password'] = "";}
                 echo "<form action = '../index.php' method = 'post' id = 'send'>  
                         <input type = 'hidden' name = 'email' value = '" . $_POST['email'] . "'>

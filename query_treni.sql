@@ -1,3 +1,6 @@
+-- Active: 1707594474934@@127.0.0.1@3306@gestione_treni
+
+
 -- Creazione delle tabelle
 
 CREATE TABLE stazione (
@@ -76,27 +79,22 @@ CREATE TABLE biglietto (
     PRIMARY KEY (id)
 );
 
--- Inserimento dei dati di esempio
--- Inserimento dei dati di esempio per le stazioni
 INSERT INTO stazione (nome) VALUES
 ('Stazione A'),
 ('Stazione B'),
 ('Stazione C');
 
--- Inserimento dei dati di esempio per le tratte
 INSERT INTO tratta (prima_stazione, ultima_stazione) VALUES
 (1, 2),
 (1, 3),
 (2, 3);
 
--- Inserimento dei dati di esempio per i treni
 INSERT INTO treno (id, tratta) VALUES
 ('EXP001', 1),
 ('REG002', 2),
 ('FAST003', 3);
 ('123456', 3);
 
--- Inserimento dei dati di esempio per le sottotratte
 INSERT INTO sottotratta (tratta, orario_partenza, orario_arrivo, prima_stazione, ultima_stazione) VALUES
 (1, '08:00:00', '08:30:00', 1, 2),
 (1, '08:35:00', '09:00:00', 2, 3),
@@ -105,23 +103,22 @@ INSERT INTO sottotratta (tratta, orario_partenza, orario_arrivo, prima_stazione,
 (3, '10:00:00', '10:30:00', 1, 2),
 (3, '10:35:00', '11:00:00', 2, 3);
 
--- Inserimento dei dati di esempio per i ritardi
+
 INSERT INTO ritardo (minuti, treno, data, sottotratta) VALUES
 (10, 'EXP001', '2024-02-09', 1),
 (5, 'REG002', '2024-02-10', 2);
 
--- Inserimento dei dati di esempio per i macchinisti
+
 INSERT INTO macchinista (CF, nome, cognome, password, treno) VALUES
 ('ABCD12345', 'Mario', 'Rossi', 'password123', 'EXP001'),
 ('EFGH56789', 'Luca', 'Bianchi', 'qwerty456', 'REG002'),
 ('bena', 'Leonardo', 'Benatti', '1234', 'REG002');
 
--- Inserimento dei dati di esempio per gli utenti
-INSERT INTO utente (email, nome, cognome, password) VALUES
-('user1@example.com', 'Giulia', 'Verdi', 'user123'),
-('user2@example.com', 'Marco', 'Neri', 'pass456');
 
--- Inserimento dei dati di esempio per i biglietti
+INSERT INTO utente (email, nome, cognome, password) VALUES
+('nome.cognome@gmail.com', 'nome', 'cognome', 'utente')
+
+
 INSERT INTO biglietto (prezzo, disponibilita, tratta, data_partenza, orario_partenza) VALUES
 (25.50, 50, 1, '2024-02-15', '08:00:00'),
 (15.75, 30, 2, '2024-02-17', '10:30:00');
