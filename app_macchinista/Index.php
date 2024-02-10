@@ -15,22 +15,22 @@
 <div class="container">
     <div class="login-box">
         <h2>Login</h2>
-        <form action="login/check.php" method="post">
-            <select>
-                <option></option>
-
-            </select>
+        <form action="login_macchinista/check.php" method="post">
 
             <div class="input-box">
-                <label>Email</label>
-                <input type="text" name="email">
+                <label>Codice Fiscale</label>
+                <input type="text" name="CF" value = "<?php if(isset($_POST["CF"])){echo $_POST["CF"];} ?>">
             </div>
             <div class="input-box">
                 <label>Password</label>
-                <input type="password" name="password">
+                <input type="password" name="password" value = "<?php if(isset($_POST["password"])){echo $_POST["password"];} ?>" style = "<?php if(isset($_POST["password"]) && $_POST["password"] == ""){echo "border: 2px solid red;";} ?>">
+            </div>
+            <div class="input-box">
+                <label>A bordo del treno:</label>
+                <input type="text" name="treno" value = "<?php if(isset($_POST["treno"])){echo $_POST["treno"];} ?>" style = "<?php if(isset($_POST["treno"]) && $_POST["treno"] == ""){echo "border: 2px solid red;";} ?>">
             </div>
 
-            <button id="login-button" type="submit">Login</button>
+            <input name = "login" id="login-button" type="submit" value = "login">
         </form>
     </div>
 </div>

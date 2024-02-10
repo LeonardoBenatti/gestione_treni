@@ -47,7 +47,7 @@ CREATE TABLE ritardo (
 );
 
 
-CREATE TABLE capotreno (
+CREATE TABLE macchinista (
     CF VARCHAR(15),
     nome VARCHAR(15),
     cognome VARCHAR(15),
@@ -94,6 +94,7 @@ INSERT INTO treno (id, tratta) VALUES
 ('EXP001', 1),
 ('REG002', 2),
 ('FAST003', 3);
+('123456', 3);
 
 -- Inserimento dei dati di esempio per le sottotratte
 INSERT INTO sottotratta (tratta, orario_partenza, orario_arrivo, prima_stazione, ultima_stazione) VALUES
@@ -109,10 +110,11 @@ INSERT INTO ritardo (minuti, treno, data, sottotratta) VALUES
 (10, 'EXP001', '2024-02-09', 1),
 (5, 'REG002', '2024-02-10', 2);
 
--- Inserimento dei dati di esempio per i capotreno
-INSERT INTO capotreno (CF, nome, cognome, password, treno) VALUES
+-- Inserimento dei dati di esempio per i macchinisti
+INSERT INTO macchinista (CF, nome, cognome, password, treno) VALUES
 ('ABCD12345', 'Mario', 'Rossi', 'password123', 'EXP001'),
-('EFGH56789', 'Luca', 'Bianchi', 'qwerty456', 'REG002');
+('EFGH56789', 'Luca', 'Bianchi', 'qwerty456', 'REG002'),
+('bena', 'Leonardo', 'Benatti', '1234', 'REG002');
 
 -- Inserimento dei dati di esempio per gli utenti
 INSERT INTO utente (email, nome, cognome, password) VALUES
