@@ -82,7 +82,15 @@ CREATE TABLE biglietto (
 INSERT INTO stazione (nome) VALUES
 ('Stazione A'),
 ('Stazione B'),
-('Stazione C');
+('Stazione C'),
+('bologna'),
+('san pietro in c'),
+('ferrara'),
+('rovigo'),
+('termee euganee-abano-montegrotto'),
+('padova'),
+('venezia mestre'),
+('venezia santa lucia');
 
 INSERT INTO tratta (prima_stazione, ultima_stazione) VALUES
 (1, 2),
