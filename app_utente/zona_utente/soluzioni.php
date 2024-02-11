@@ -1,5 +1,3 @@
-
-
 <?php
 /* QUESTO CODICE, PARTENDO DALLA PARTENZA E DALLA DESTINAZIONE, RITORNA TUTTE LE TRATTE POSSIBILI E TUTTE LE SOTTOTRATTE ALL'INTERNO  */
     $hostname = "localhost";
@@ -12,16 +10,16 @@
     $query_tratta = "SELECT * FROM tratta 
     WHERE id IN (
         SELECT tratta FROM sottotratta 
-        WHERE prima_stazione = (SELECT id FROM stazione WHERE nome = 'bologna')
+        WHERE prima_stazione = (SELECT id FROM stazione WHERE nome = ?)
     )
     AND id IN (
         SELECT tratta FROM sottotratta 
-        WHERE ultima_stazione = (SELECT id FROM stazione WHERE nome = 'ferrara')
+        WHERE ultima_stazione = (SELECT id FROM stazione WHERE nome = ?)
     )";
 
     $stmt = $connessione->prepare($query_tratta);
     $connessione->prepare($query_tratta);
-    //$stmt->bind_param("s", $_POST['email']);
+    $stmt->bind_param("ss", $_POST['partenza'], $_POST['destinazione']);
     $stmt->execute();
     $result_tratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
