@@ -1,4 +1,8 @@
--- Creazione delle tabelle
+
+-- Active: 1707732823561@@127.0.0.1@3306@gestione_treni
+
+CREATE DATABASE gestione_treni
+    DEFAULT CHARACTER SET = 'utf8mb4';
 
 CREATE TABLE stazione (
     id INT AUTO_INCREMENT,
