@@ -1,8 +1,6 @@
+-- Active: 1707411005403@@127.0.0.1@3306@gestione_treni
 
--- Active: 1707732823561@@127.0.0.1@3306@gestione_treni
-
-CREATE DATABASE gestione_treni
-    DEFAULT CHARACTER SET = 'utf8mb4';
+-- Creazione delle tabelle
 
 CREATE TABLE stazione (
     id INT AUTO_INCREMENT,
@@ -27,12 +25,13 @@ CREATE TABLE treno (
 );
 
 CREATE TABLE sottotratta (
-    id INT AUTO_INCREMENT,
+    id INT,
     tratta INT,
     orario_partenza TIME,
     orario_arrivo TIME,
     prima_stazione INT,
     ultima_stazione INT,
+    sottotratta_successiva INT,
     FOREIGN KEY (prima_stazione) REFERENCES stazione(id),
     FOREIGN KEY (ultima_stazione) REFERENCES stazione(id),
     FOREIGN KEY (tratta) REFERENCES tratta(id),
@@ -120,32 +119,40 @@ INSERT INTO treno (id, tratta) VALUES
 ('FAST003', 3);
 
 -- Inserimento dei dati di esempio per le sottotratte
-INSERT INTO sottotratta (tratta, orario_partenza, orario_arrivo, prima_stazione, ultima_stazione) VALUES
-(1, '08:00:00', '08:30:00', 1, 2),
-(1, '08:35:00', '09:00:00', 2, 3),
-(2, '09:00:00', '09:30:00', 1, 2),
-(2, '09:35:00', '10:00:00', 2, 3),
-(3, '10:00:00', '10:30:00', 1, 2),
-(3, '10:35:00', '11:00:00', 2, 3);
+INSERT INTO sottotratta (id, tratta, orario_partenza, orario_arrivo, prima_stazione, ultima_stazione, sottotratta_successiva) VALUES
+(7, 4, '15:10:00', '15:28:00', 4, 5, 8),
+(8, 4, '15:28:00', '15:41:00', 5, 6, 9),
+(9, 4, '15:41:00', '16:03:00', 6, 7, 10),
+(10, 4, '16:03:00', '16:28:00', 7, 8, 11),
+(11, 4, '16:28:00', '16:35:00', 8, 9, 12),
+(12, 4, '16:35:00', '16:53:00', 9, 10, 13),
+(13, 4, '16:53:00', '17:10:00', 10, 11, 14),
+(14, 4, '17:10:00', '17:20:00', 11, 12, NULL);
 
-INSERT INTO sottotratta (tratta, orario_partenza, orario_arrivo, prima_stazione, ultima_stazione) VALUES
-(4, '15:10:00', '15:28:00', 4, 5),
-(4, '15:28:00', '15:41:00', 5, 6),
-(4, '15:41:00', '16:03:00', 6, 7),
-(4, '16:03:00', '16:28:00', 7, 8),
-(4, '16:28:00', '16:35:00', 8, 9),
-(4, '16:35:00', '16:53:00', 9, 10),
-(4, '16:53:00', '17:10:00', 10, 11),
-(4, '17:10:00', '17:20:00', 11, 12);
+INSERT INTO sottotratta (id, tratta, orario_partenza, orario_arrivo, prima_stazione, ultima_stazione, sottotratta_successiva) VALUES
+(15, 4, '18:10:00', '18:28:00', 4, 5, 16),
+(16, 4, '18:28:00', '18:41:00', 5, 6, 17),
+(17, 4, '18:41:00', '19:03:00', 6, 7, 18),
+(18, 4, '19:03:00', '19:28:00', 7, 8, 19),
+(19, 4, '19:28:00', '19:35:00', 8, 9, 20),
+(20, 4, '19:35:00', '19:53:00', 9, 10, 21),
+(21, 4, '19:53:00', '20:10:00', 10, 11, 22),
+(22, 4, '20:10:00', '20:20:00', 11, 12, NULL);
 
-INSERT INTO sottotratta (tratta, orario_partenza, orario_arrivo, prima_stazione, ultima_stazione) VALUES
-(5, '06:50:00', '07:03:00', 4, 13),
-(5, '07:03:00', '07:07:00', 13, 14),
-(5, '07:07:00', '07:12:00', 14, 15),
-(5, '07:12:00', '07:18:00', 15, 5),
-(5, '07:18:00', '07:24:00', 5, 16),
-(5, '07:24:00', '07:29:00', 16, 17),
-(5, '07:29:00', '07:40:00', 17, 6);
+INSERT INTO sottotratta (id, tratta, orario_partenza, orario_arrivo, prima_stazione, ultima_stazione, sottotratta_successiva) VALUES
+(23, 5, '06:50:00', '07:03:00', 4, 13, 24),
+(24, 5, '07:03:00', '07:07:00', 13, 14, 25),
+(25, 5, '07:07:00', '07:12:00', 14, 15, 26),
+(26, 5, '07:12:00', '07:18:00', 15, 5, 27),
+(27, 5, '07:18:00', '07:24:00', 5, 16, 28),
+(28, 5, '07:24:00', '07:29:00', 16, 17, 29),
+(29, 5, '07:29:00', '07:40:00', 17, 6, NULL);
+
+ALTER TABLE sottotratta
+ADD CONSTRAINT fk_sottotratta_successiva
+FOREIGN KEY (sottotratta_successiva)
+REFERENCES sottotratta(id);
+
 
 -- Inserimento dei dati di esempio per i ritardi
 INSERT INTO ritardo (minuti, treno, data, sottotratta) VALUES

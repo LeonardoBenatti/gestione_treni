@@ -77,7 +77,7 @@
             if($result != NULL){
                 $_SESSION["logged_email"] = $result[0]["email"];   //SE L'UTENTE ESISTE E LA PASSWORD è CORRETTA SI PROCEDE
                 //echo $_SESSION["logged_email"];
-                header("Location: ....");
+                header("Location: ../zona_utente/ricerca.php");
             }
             else{                                                    //SE L'UTENTE ESISTE E LA PASSWORD è SBAGLIATA SI MANDA AL LOGIN L'EMAIL CHE ANDRà RISCRITTA E LA PASSWORD VUOTA
                 if($_POST['password'] != ""){$_POST['password'] = "";}

@@ -17,3 +17,5 @@ AND ultima_stazione = (SELECT id FROM stazione WHERE nome = "Stazione C")
 
 -- login utente
 SELECT * FROM utente WHERE email = "leo" AND password = "1234"
+
+SELECT nome FROM stazione WHERE id = 5
