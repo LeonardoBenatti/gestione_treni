@@ -1,4 +1,4 @@
--- Active: 1706612551839@@127.0.0.1@3306@gestione_treni
+-- Active: 1707218068252@@127.0.0.1@3306@gestione_treni
 
 -- trovare i ritardi di un treno partendo da ritardo
 
@@ -18,11 +18,10 @@ AND ultima_stazione = (SELECT id FROM stazione WHERE nome = "Stazione C")
 -- login utente
 SELECT * FROM utente WHERE email = "leo" AND password = "1234"
 
-SELECT nome FROM stazione WHERE id = 5
+SELECT nome FROM stazione WHERE id = 15
 
-SELECT * FROM sottotratta 
-    WHERE id = 15
-    AND tratta = 4
+SELECT id FROM sottotratta
+        WHERE sottotratta_successiva = 8
 
 SELECT id FROM sottotratta
 WHERE sottotratta_successiva = (SELECT id FROM sottotratta WHERE sottotratta_successiva = 12)

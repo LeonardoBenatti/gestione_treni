@@ -1,4 +1,4 @@
--- Active: 1706612551839@@127.0.0.1@3306@gestione_treni
+-- Active: 1707218068252@@127.0.0.1@3306@gestione_treni
 
 -- Creazione delle tabelle
 
@@ -168,8 +168,3 @@ INSERT INTO capotreno (CF, nome, cognome, password, treno) VALUES
 INSERT INTO utente (email, nome, cognome, password) VALUES
 ('user1@example.com', 'Giulia', 'Verdi', 'user123'),
 ('user2@example.com', 'Marco', 'Neri', 'pass456');
-
--- Inserimento dei dati di esempio per i biglietti
-INSERT INTO biglietto (prezzo, disponibilita, tratta, data_partenza, orario_partenza) VALUES
-(25.50, 50, 1, '2024-02-15', '08:00:00'),
-(15.75, 30, 2, '2024-02-17', '10:30:00');
