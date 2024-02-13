@@ -27,50 +27,72 @@
     //echo $_POST["destinazione"] . "<br>";
 
     foreach($result_tratta as $row){
-        var_dump($row);
+        //var_dump($row);
         //echo "tratta selezionata: " . $row["id"] . "<br>";
 
         $partenza = getStaz($_POST['partenza'], $connessione);
         $tratta = $row["id"];
 
+        $query_partenza = "SELECT * FROM sottotratta 
+                            WHERE prima_stazione = ?
+                            AND tratta = ?";
+
+        $stmt = $connessione->prepare($query_partenza);
+        $connessione->prepare($query_partenza);
+        $stmt->bind_param("ii", $partenza, $tratta);
+        $stmt->execute();
+        $result_partenza = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        foreach($result_partenza as $sottottratta){
+
+            $prox = $sottottratta["id"];
+            $ultima_stazione = $sottottratta["ultima_stazione"];
+
         echo "<form action='tratta.php' method='post'>";
             
             echo "<button type='submit' name = 'tratta'>";
 
-            while(getStaz($partenza, $connessione) != $_POST['destinazione']){
+            do{
 
                 $query_sottotratta = "SELECT * FROM sottotratta 
-                            WHERE prima_stazione = ?
+                            WHERE id = ?
                             AND tratta = ?";
                 
                 $stmt = $connessione->prepare($query_sottotratta);
                 $connessione->prepare($query_sottotratta);
-                $stmt->bind_param("ii", $partenza, $tratta);
+                $stmt->bind_param("ii", $prox, $tratta);
                 $stmt->execute();
                 $result_sottotratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-                //var_dump($result_sottotratta);
-                if(getStaz($partenza, $connessione) == $_POST['partenza'] ){
-                    echo $_POST['partenza']. " " . $result_sottotratta[1]["orario_partenza"];
-                }
-                
-                if(getStaz($result_sottotratta[1]["ultima_stazione"], $connessione) == $_POST['destinazione'] ){
-                    echo " - " . $_POST['destinazione']. " " . $result_sottotratta[1]["orario_arrivo"];
-                }
-                
+                //echo "prox: " . $prox . "<br>";
+                //echo "tratta: " . $tratta . "<br>";
 
-                $partenza = $result_sottotratta[1]["ultima_stazione"];
-                //echo "partenza: " . getStaz($partenza, $connessione) . "<br>";
-            }
+
+                if(getStaz($result_sottotratta[0]["prima_stazione"], $connessione) == $_POST['partenza'] ){
+                    echo $_POST['partenza']. " " . $result_sottotratta[0]["orario_partenza"];
+                }
+                
+                if(getStaz($result_sottotratta[0]["ultima_stazione"], $connessione) == $_POST['destinazione'] ){
+                    echo " - " . $_POST['destinazione']. " " . $result_sottotratta[0]["orario_arrivo"] . "<br>";
+                }
+                
+                $ultima_stazione = $result_sottotratta[0]["ultima_stazione"];
+                $prox = $result_sottotratta[0]["sottotratta_successiva"];
+                //echo "ulti_staz: " . getStaz($ultima_stazione, $connessione) . "<br>";
+            }while(getStaz($ultima_stazione, $connessione) != $_POST['destinazione']);
             echo "</button>";
 
-            echo "<input type='hidden' name = 'tratta' value = '" . $row["id"] . "'>";
+            echo "<input type='hidden' name = 'tratta' value = '" . $tratta . "'>";
             echo "<input type='hidden' name = 'partenza' value = '" . $_POST["partenza"] . "'>";
             echo "<input type='hidden' name = 'destinazione' value = '" . $_POST["destinazione"] . "'>";
-            echo "<input type='hidden' name = 'capolinea' value = '" . $row["ultima_stazione"] . "'>";
+            echo "<input type='hidden' name = 'prima_sottotratta' value = '" . $sottottratta["id"] . "'>";
         
         echo "</form>";
 
+
+        }
+
+        
     }
 
     function getStaz($var, $connessione){

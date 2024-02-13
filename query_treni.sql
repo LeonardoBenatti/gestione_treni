@@ -1,4 +1,4 @@
--- Active: 1707411005403@@127.0.0.1@3306@gestione_treni
+-- Active: 1706612551839@@127.0.0.1@3306@gestione_treni
 
 -- Creazione delle tabelle
 
@@ -156,8 +156,8 @@ REFERENCES sottotratta(id);
 
 -- Inserimento dei dati di esempio per i ritardi
 INSERT INTO ritardo (minuti, treno, data, sottotratta) VALUES
-(10, 'EXP001', '2024-02-09', 1),
-(5, 'REG002', '2024-02-10', 2);
+(10, 'EXP001', '2024-02-09', 7),
+(5, 'REG002', '2024-02-10', 8);
 
 -- Inserimento dei dati di esempio per i capotreno
 INSERT INTO capotreno (CF, nome, cognome, password, treno) VALUES

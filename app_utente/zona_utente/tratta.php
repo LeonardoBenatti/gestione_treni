@@ -10,14 +10,50 @@
 
 
     echo "tratta selezionata: " . $_POST["tratta"] . "<br>";
-    echo "partenza: " . $_POST["partenza"] . "<br>";
-    echo "destinazione: " . $_POST["destinazione"] . "<br>";
-    echo "capolinea: " . $_POST["capolinea"] . "<br>";
+    //echo "partenza: " . $_POST["partenza"] . "<br>";
+    //echo "destinazione: " . $_POST["destinazione"] . "<br>";
+    //echo "sott_succ: " . $_POST["prima_sottotratta"] . "<br>";
 
     $partenza = getStaz($_POST['partenza'], $connessione);;
     $tratta = $_POST["tratta"];
 
-    while($partenza != $_POST["capolinea"]){
+    $sott_succ = $_POST["prima_sottotratta"];
+
+
+    while(true){
+        $query = "SELECT id FROM sottotratta
+        WHERE sottotratta_successiva = ?";
+        
+        $stmt = $connessione->prepare($query);
+        $connessione->prepare($query);
+        $stmt->bind_param("i", $sott_succ);
+        $stmt->execute();
+        $result= $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        if($result != null){
+            $sott_succ = $result[0]["id"];
+        }
+        else{
+            break;
+        }
+    }
+
+
+    $query_partenza = "SELECT ultima_stazione FROM tratta 
+                    WHERE id = ?";
+        
+    $stmt = $connessione->prepare($query_partenza);
+    $connessione->prepare($query_partenza);
+    $stmt->bind_param("i", $_POST["tratta"]);
+    $stmt->execute();
+    $result_partenza = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+    $capolinea = $result_partenza[0]["ultima_stazione"];
+    $partenza = $sott_succ;
+
+
+
+    while($partenza != $capolinea){
         $query_sottotratta = "SELECT * FROM sottotratta 
                     WHERE prima_stazione = ?
                     AND tratta = ?";
@@ -27,6 +63,9 @@
         $stmt->bind_param("ii", $partenza, $tratta);
         $stmt->execute();
         $result_sottotratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        echo "partenza: " . getStaz($partenza, $connessione) . "<br>";
+        echo "tratta: " . $tratta . "<br>";
 
         var_dump($result_sottotratta);
         echo "<br>";
