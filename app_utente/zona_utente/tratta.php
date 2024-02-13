@@ -15,11 +15,11 @@
     //echo "destinazione: " . $_POST["destinazione"] . "<br>";
     //echo "sott_succ: " . $_POST["prima_sottotratta"] . "<br>";
 
-    $partenza = getStaz($_POST['partenza'], $connessione);;
     $tratta = $_POST["tratta"];
 
     $sott_succ = $_POST["prima_sottotratta"];
     $partenza;
+    $orario_partenza;
 
     //echo "sott_succ_iniziale: " . $sott_succ . "<br>";
 
@@ -81,7 +81,7 @@
         //echo "tratta: " . $tratta . "<br>";
 
         //var_dump($result_sottotratta);
-        echo "stazione: " . getStaz($result_sottotratta[0]["ultima_stazione"], $connessione) . "<br>";
+        echo "stazione: " . getStaz($result_sottotratta[0]["ultima_stazione"], $connessione) . " ---- ARRIVO PREVISTO - " . $result_sottotratta[0]["orario_arrivo"] . "<br>";
         echo "<br>";
 
         $partenza = $result_sottotratta[0]["ultima_stazione"];

@@ -23,6 +23,12 @@ SELECT nome FROM stazione WHERE id = 15
 SELECT id FROM sottotratta
         WHERE sottotratta_successiva = 8
 
+    
+SELECT * FROM sottotratta 
+    WHERE prima_stazione = 4
+    AND tratta = 4
+
+
 SELECT id FROM sottotratta
 WHERE sottotratta_successiva = (SELECT id FROM sottotratta WHERE sottotratta_successiva = 12)
 
