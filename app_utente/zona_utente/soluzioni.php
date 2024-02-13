@@ -18,7 +18,6 @@
     )";
 
     $stmt = $connessione->prepare($query_tratta);
-    $connessione->prepare($query_tratta);
     $stmt->bind_param("ss", $_POST['partenza'], $_POST['destinazione']);
     $stmt->execute();
     $result_tratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -38,7 +37,6 @@
                             AND tratta = ?";
 
         $stmt = $connessione->prepare($query_partenza);
-        $connessione->prepare($query_partenza);
         $stmt->bind_param("ii", $partenza, $tratta);
         $stmt->execute();
         $result_partenza = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -52,6 +50,8 @@
             
             echo "<button type='submit' name = 'tratta'>";
 
+            $tratte_utili = array();
+
             do{
 
                 $query_sottotratta = "SELECT * FROM sottotratta 
@@ -59,13 +59,14 @@
                             AND tratta = ?";
                 
                 $stmt = $connessione->prepare($query_sottotratta);
-                $connessione->prepare($query_sottotratta);
                 $stmt->bind_param("ii", $prox, $tratta);
                 $stmt->execute();
                 $result_sottotratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
                 //echo "prox: " . $prox . "<br>";
                 //echo "tratta: " . $tratta . "<br>";
+
+                array_push($tratte_utili, $result_sottotratta[0]);
 
 
                 if(getStaz($result_sottotratta[0]["prima_stazione"], $connessione) == $_POST['partenza'] ){
@@ -80,12 +81,16 @@
                 $prox = $result_sottotratta[0]["sottotratta_successiva"];
                 //echo "ulti_staz: " . getStaz($ultima_stazione, $connessione) . "<br>";
             }while(getStaz($ultima_stazione, $connessione) != $_POST['destinazione']);
+
             echo "</button>";
 
             echo "<input type='hidden' name = 'tratta' value = '" . $tratta . "'>";
             echo "<input type='hidden' name = 'partenza' value = '" . $_POST["partenza"] . "'>";
             echo "<input type='hidden' name = 'destinazione' value = '" . $_POST["destinazione"] . "'>";
-            echo "<input type='hidden' name = 'prima_sottotratta' value = '" . $sottottratta["id"] . "'>";
+            echo "<input type='hidden' name = 'prima_sottotratta' value = '" . $sottottratta["id"] . "'>";   
+            foreach($tratte_utili as $tratta_utile){
+                echo "<input type='hidden' name = 'tratte_utili[]' value = '" . $tratta_utile["id"] . "'>";
+            }
         
         echo "</form>";
 

@@ -11,9 +11,13 @@
 
     echo "tratta selezionata: " . $_POST["tratta"] . "<br>";
     echo "<br>";
-    //echo "partenza: " . $_POST["partenza"] . "<br>";
-    //echo "destinazione: " . $_POST["destinazione"] . "<br>";
-    //echo "sott_succ: " . $_POST["prima_sottotratta"] . "<br>";
+
+    
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $tratte_utili = $_POST["tratte_utili"];
+    }
+
+
 
     $tratta = $_POST["tratta"];
 
@@ -63,8 +67,10 @@
     //echo "capolinea nome: " . getStaz($capolinea, $connessione) . "<br>";
     //echo "capolinea id: " . $capolinea . "<br>";
 
-    echo "stazione: " . getStaz($partenza, $connessione) . "<br>";
+    //echo "stazione: " . getStaz($partenza, $connessione) . "<br>";
     echo "<br>";
+
+    $sotttratte = array();
 
     while($partenza != $capolinea){
         $query_sottotratta = "SELECT * FROM sottotratta 
@@ -72,7 +78,6 @@
                     AND tratta = ?";
         
         $stmt = $connessione->prepare($query_sottotratta);
-        $connessione->prepare($query_sottotratta);
         $stmt->bind_param("ii", $partenza, $tratta);
         $stmt->execute();
         $result_sottotratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -80,13 +85,25 @@
         //echo "partenza: " . getStaz($partenza, $connessione) . "<br>";
         //echo "tratta: " . $tratta . "<br>";
 
+        array_push($sotttratte, $result_sottotratta[0]);
+
         //var_dump($result_sottotratta);
-        echo "stazione: " . getStaz($result_sottotratta[0]["ultima_stazione"], $connessione) . " ---- ARRIVO PREVISTO - " . $result_sottotratta[0]["orario_arrivo"] . "<br>";
-        echo "<br>";
+        //echo "stazione: " . getStaz($result_sottotratta[0]["prima_stazione"], $connessione) . " ---- ARRIVO PREVISTO - " . $result_sottotratta[0]["orario_arrivo"] . "<br>";
+        //echo "<br>";
 
         $partenza = $result_sottotratta[0]["ultima_stazione"];
 
     }
+
+    foreach($sotttratte as $sottotratta){
+        if(in_array($sottotratta["id"], $tratte_utili)){
+            echo "DA PERCORRERRE <br>";
+        }
+        echo "PARTENZA DA: " . getStaz($sottotratta["prima_stazione"], $connessione) . " ---- PARTENZA PREVISTA - " . $sottotratta["orario_partenza"] . " ---- ARRIVO PREVISTO - " . $sottotratta["orario_arrivo"] . " A " . getStaz($sottotratta["ultima_stazione"], $connessione) . "<br>";
+
+    }
+
+
 
     function getStaz($var, $connessione){
         $query = "";
