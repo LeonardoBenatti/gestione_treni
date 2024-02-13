@@ -1,4 +1,4 @@
--- Active: 1707218068252@@127.0.0.1@3306@gestione_treni
+-- Active: 1707411005403@@127.0.0.1@3306@gestione_treni
 
 -- trovare i ritardi di un treno partendo da ritardo
 
@@ -32,4 +32,14 @@ SELECT * FROM sottotratta
 SELECT id FROM sottotratta
 WHERE sottotratta_successiva = (SELECT id FROM sottotratta WHERE sottotratta_successiva = 12)
 
+SELECT id, prima_stazione FROM sottotratta
+        WHERE sottotratta_successiva = 7
 
+SELECT * FROM sottotratta
+        WHERE id = 8
+
+SELECT * FROM sottotratta s
+    LEFT JOIN ritardo r ON s.id = r.sottotratta
+                    WHERE s.prima_stazione = 4
+                    AND s.tratta = 4
+                    AND s.id = 7

@@ -8,7 +8,6 @@
 
     $connessione = new mysqli($hostname, $username, $password, $database);
 
-
     echo "tratta selezionata: " . $_POST["tratta"] . "<br>";
     echo "<br>";
 
@@ -17,15 +16,21 @@
         $tratte_utili = $_POST["tratte_utili"];
     }
 
-
-
     $tratta = $_POST["tratta"];
 
+    $query = "SELECT * FROM sottotratta
+        WHERE id = ?";
+        
+        $stmt = $connessione->prepare($query);
+        $stmt->bind_param("i",$_POST["prima_sottotratta"]);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
     $sott_succ = $_POST["prima_sottotratta"];
-    $partenza;
+    $partenza = $result [0]["prima_stazione"];
     $orario_partenza;
 
-    //echo "sott_succ_iniziale: " . $sott_succ . "<br>";
+    //echo "partenza: " . $partenza . "<br>";
 
 
     while(true){
@@ -42,7 +47,6 @@
         if(!empty($result)){
             $sott_succ = $result[0]["id"];
             $partenza = $result[0]["prima_stazione"];
-            
         }
         else{
             break;
@@ -70,22 +74,28 @@
     //echo "stazione: " . getStaz($partenza, $connessione) . "<br>";
     echo "<br>";
 
-    $sotttratte = array();
+    $sottratte = array();
 
     while($partenza != $capolinea){
-        $query_sottotratta = "SELECT * FROM sottotratta 
-                    WHERE prima_stazione = ?
-                    AND tratta = ?";
+        $query_sottotratta = "SELECT * FROM sottotratta s
+                        LEFT JOIN ritardo r ON s.id = r.sottotratta
+                            WHERE s.prima_stazione = ?
+                            AND s.tratta = ?
+                            AND s.id = ?";
         
+        //echo "partenza id: " . $partenza . "<br>";
+        //echo "sott_succ id: " . $sott_succ . "<br>";
+
         $stmt = $connessione->prepare($query_sottotratta);
-        $stmt->bind_param("ii", $partenza, $tratta);
+        $stmt->bind_param("iii", $partenza, $tratta, $sott_succ);
         $stmt->execute();
         $result_sottotratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
         //echo "partenza: " . getStaz($partenza, $connessione) . "<br>";
         //echo "tratta: " . $tratta . "<br>";
 
-        array_push($sotttratte, $result_sottotratta[0]);
+        array_push($sottratte, $result_sottotratta[0]);
+        $sott_succ = $result_sottotratta[0]["sottotratta_successiva"];
 
         //var_dump($result_sottotratta);
         //echo "stazione: " . getStaz($result_sottotratta[0]["prima_stazione"], $connessione) . " ---- ARRIVO PREVISTO - " . $result_sottotratta[0]["orario_arrivo"] . "<br>";
@@ -95,16 +105,13 @@
 
     }
 
-    foreach($sotttratte as $sottotratta){
+    foreach($sottratte as $sottotratta){
         if(in_array($sottotratta["id"], $tratte_utili)){
             echo "DA PERCORRERRE <br>";
         }
-        echo "PARTENZA DA: " . getStaz($sottotratta["prima_stazione"], $connessione) . " ---- PARTENZA PREVISTA - " . $sottotratta["orario_partenza"] . " ---- ARRIVO PREVISTO - " . $sottotratta["orario_arrivo"] . " A " . getStaz($sottotratta["ultima_stazione"], $connessione) . "<br>";
+        echo "PARTENZA DA: " . getStaz($sottotratta["prima_stazione"], $connessione) . " ---- PARTENZA PREVISTA - " . $sottotratta["orario_partenza"] . " ---- ARRIVO PREVISTO - " . $sottotratta["orario_arrivo"] . " A " . getStaz($sottotratta["ultima_stazione"], $connessione) . " ---- RITARDO: " . $sottotratta["minuti"] . " MINUTI" . "<br>";
 
     }
-
-
-
     function getStaz($var, $connessione){
         $query = "";
         $param_type = "";
@@ -130,3 +137,19 @@
 
     
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tratta</title>
+</head>
+<body>
+    <table>
+        <?php
+
+        ?>
+    </table>
+</body>
+</html>
