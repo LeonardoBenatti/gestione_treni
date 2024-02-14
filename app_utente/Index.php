@@ -1,3 +1,19 @@
+<?php
+    session_start();
+
+    // Impostare il fuso orario desiderato, ad esempio:
+    date_default_timezone_set('Europe/Rome');
+
+    // Ottenere la data attuale
+    $currentDate = date('Y-m-d');
+
+    // Ottenere l'orario attuale
+    $currentTime = date('H:i:s');
+
+    $_SESSION["currentDate"] = $currentDate;
+    $_SESSION["currentTime"] = $currentTime;
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">

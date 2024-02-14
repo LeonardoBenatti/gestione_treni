@@ -47,7 +47,9 @@
                     //echo "<br> macchinista trovato password corretta treno esistente <br>";
                     $_SESSION["logged_CF"] = $result[0]["CF"];     
                     $_SESSION["treno"] = $result[0]["id"];  
-                    header("Location: ....");
+                    echo "<form action = '../zona_macchinista/view_macchinista.php' method = 'post' id = 'send'>  
+                        <input type = 'hidden' name = 'just_logged_in' value = 'logged'>
+                    </form>";
                 }
                 else{                                       //SE IL MACCHINISTA ESISTE E LA PASSWORD è CORRETTA MA IL TRENO NON ESISTE SI MANDA AL LOGIN IL CF CHE ANDRà RISCRITTA
                     // "<br> macchinista trovato password corretta treno non esistente <br>";

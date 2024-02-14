@@ -43,3 +43,13 @@ SELECT * FROM sottotratta s
                     WHERE s.prima_stazione = 4
                     AND s.tratta = 4
                     AND s.id = 7
+
+SELECT * FROM sottotratta 
+                        WHERE prima_stazione = 4
+                        AND tratta = 4
+
+SELECT s.id, orario_partenza, orario_arrivo, s.prima_stazione AS '1staz', s.ultima_stazione AS '2staz', s.sottotratta_successiva, t.ultima_stazione AS "capolinea" FROM sottotratta s
+LEFT JOIN tratta t ON s.tratta = t.id
+WHERE s.tratta = (SELECT tratta FROM treno WHERE id = "EXP002")
+AND s.prima_stazione = t.prima_stazione
+
