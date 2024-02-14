@@ -18,11 +18,19 @@
 
     if (isset($_POST["just_logged_in"])){
         echo "SELEZIONA UNA FASCIA ORARIA: <br>";
-        getFasceOrarie($_SESSION["treno"], $connessione);
-        echo "<form action = 'view_macchinista.php' method = 'post'>";
-
-        echo "</form>";
+        foreach(getFasceOrarie($_SESSION["treno"], $connessione) as $fascia_oraria){
+            echo "<form action = 'view_macchinista.php' method = 'post'>";
+                echo "<input type = 'submit' name = 'fascia' value = '" . $fascia_oraria . "'>";
+            echo "</form>";
+        }
     }
+
+    if (isset($_POST["fascia"])) {
+        echo "<form action='view_macchinista.php' method='post'>
+                  <input name='ritardo' type='number' min='5' step='5' placeholder='ritardo' value='" . (isset($_POST['ritardo']) ? $_POST['ritardo'] : '') . "'> 
+                  <input name='aggiorna' type='submit' value='Invia'> 
+              </form>";
+    }    
 
     if (isset($_POST["aggiorna"])){
         aggiornaRitardo($_POST["ritardo"], $_SESSION["treno"], 9, $connessione);
@@ -38,10 +46,7 @@
     <title>view_macchinista</title>
 </head>
 <body>
-    <form action = "view_macchinista.php" method = "post">
-        <input name = "ritardo" type = "number" min = "5" step = "5" placeholder = "ritardo" value = <?php if(isset($_POST["ritardo"])){echo $_POST["ritardo"];} ?>> 
-        <input name = "aggiorna" type = "submit" value = "Invia" > 
-    </form>
+    
 </body>
 </html>
 
@@ -129,7 +134,6 @@
 
         return $result[0]["tratta"];
     }
-
     function getFasceOrarie($treno, $connessione){
         $query = "SELECT s.id, orario_partenza, orario_arrivo, s.prima_stazione AS '1staz', s.ultima_stazione AS '2staz', s.sottotratta_successiva, t.ultima_stazione AS 'capolinea' FROM sottotratta s
         LEFT JOIN tratta t ON s.tratta = t.id
@@ -145,7 +149,7 @@
         
         foreach($result as $sottotratta){
             $prox = $sottotratta["id"];
-            
+            $fascia = array();
             while($prox != null){
                 $query_sottotratta = "SELECT * FROM sottotratta 
                 WHERE id = ?";
@@ -153,16 +157,16 @@
                 $stmt = $connessione->prepare($query_sottotratta);
                 $stmt->bind_param("s", $prox);
                 $stmt->execute();
-                $result_sottotratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+                $result_sottotratta = $stmt->get_result()->fetch_assoc();
 
                 
-                echo "prox: " . $prox . "<br>";
-                var_dump($result_sottotratta);
-                
-                //array_push($sottotratta, $fasce);
+                array_push($fascia, $result_sottotratta);
                 $prox = $result_sottotratta["sottotratta_successiva"];
-            }
+            } 
+            array_push($fasce, getStaz($fascia[0]["prima_stazione"], $connessione) . " - " . $fascia[0]["orario_partenza"] . " / " . getStaz($fascia[count($fascia) - 1]["ultima_stazione"], $connessione) . " - " . $fascia[count($fascia) - 1]["orario_arrivo"]);
         }
+
+        //echo '<pre>' . var_export($fasce, true) . '</pre>';
         return $fasce;
     }
     function getSottotratte($tratta, $connessione){
