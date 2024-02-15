@@ -17,16 +17,28 @@
     echo "SONO LE ORE: " . $_SESSION["currentTime"] . " DI " . getDayOfWeek($_SESSION["currentDate"]) . " " . getItalianDate($_SESSION["currentDate"]) . "<br>";
 
     foreach(getFasceOrarie($_SESSION["treno"], $connessione, null) as $fascia_oraria){
-        echo orarioInFasciaOraria($_SESSION['currentTime'], $fascia_oraria[0]['orario_partenza'], $fascia_oraria[count($fascia_oraria)-1]['orario_arrivo']);
         if(orarioInFasciaOraria($_SESSION["currentTime"], $fascia_oraria[0]["orario_partenza"], $fascia_oraria[count($fascia_oraria)-1]["orario_arrivo"])){
-            $_SESSION["prima_tratta"] = $fascia_oraria[0]["id"];
-            echo "dio can";
+            $_SESSION["prima_sottotratta"] = $fascia_oraria[0]["id"];
         }
 
     }   
 
+    echo "<form action='view_macchinista.php' method='post'>
+                  <label>Ritado: </label>
+                  <input name='ritardo' type='number' min='5' step='5' placeholder='ritardo' value='" . (isset($_SESSION['ritardo']) ? $_SESSION['ritardo'] : '0') . "'> 
+                  <input name='aggiorna' type='submit' value='Invia'> 
+          </form>"; 
+
+    echo '<ul>';
+            foreach(getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_sottotratta"]) as $sottotratta){
+                $stazione = getStaz($sottotratta['prima_stazione'], $connessione);
+                echo '<li>' . $stazione . ' - Ritardo: ' . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . ' - Ora: ' . $sottotratta['orario_partenza'] . '</li>';
+                echo $sottotratta['id'];
+            }
+    echo '</ul>';
+
     if (isset($_POST["aggiorna"])){
-        aggiornaRitardo($_POST["ritardo"], $_SESSION["treno"], 9, $connessione);
+        aggiornaRitardo($_POST["ritardo"], $_SESSION["treno"], 7, $connessione);
     }
 
 
@@ -106,8 +118,7 @@
     // Aggiorna il ritardo ($ritardo), del treno ($treno) sulla sottotratta ($sottotratta)
     function aggiornaRitardo($ritardo, $treno, $sottotratta, $connessione) {      
         date_default_timezone_set('Europe/Rome');
-        $currentDate = date('Y-m-d');
-        $currentTime = date('H:i:s');  
+        $currentDate = date('Y-m-d'); 
         $ritardo = intval($ritardo);
 
         $query = "SELECT * FROM ritardo 
@@ -131,6 +142,28 @@
             $stmt = $connessione->prepare($query);
             $stmt->bind_param("ii", $ritardo, $result[0]["id"]);
             $stmt->execute();
+        }
+    }
+    // Ritorna quanto ritardo c'è sul treno "$treno" sulla sottotratta "$sottotratta"
+    function getRitardo($treno, $sottotratta, $connessione){
+        date_default_timezone_set('Europe/Rome');
+        $currentDate = date('Y-m-d'); 
+
+        $query = "SELECT * FROM ritardo 
+                            WHERE treno = ?
+                            AND data = ?
+                            AND sottotratta = ?";
+
+        $stmt = $connessione->prepare($query);
+        $stmt->bind_param("ssi", $treno, $currentDate, $sottotratta);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+
+        if(empty($result)){
+            return "0";
+        }
+        else{
+            return $result["minuti"];
         }
     }
     // Dall id del treno ($treno), restituisce la tratta del treno
@@ -197,6 +230,7 @@
         //echo '<pre>' . var_export($fasce, true) . '</pre>';
         return $fasce;
     }
+
     
 ?>
 
