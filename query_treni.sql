@@ -1,6 +1,10 @@
--- Active: 1707218068252@@127.0.0.1@3306@gestione_treni
+-- Active: 1707994213672@@127.0.0.1@3306@gestione_treni
 
 -- Creazione delle tabelle
+
+CREATE DATABASE gestione_treni
+
+
 
 CREATE TABLE stazione (
     id INT AUTO_INCREMENT,
@@ -163,11 +167,5 @@ INSERT INTO ritardo (minuti, treno, data, sottotratta) VALUES
 
 -- Inserimento dei dati di esempio per i capotreno
 INSERT INTO macchinista (CF, nome, cognome, password, treno) VALUES
-('ABCD12345', 'Mario', 'Rossi', 'password123', 'EXP001'),
-('EFGH56789', 'Luca', 'Bianchi', 'qwerty456', 'REG002'),
 ('bena', 'leo', 'benatti', '1234', 'EXP002');
 
--- Inserimento dei dati di esempio per gli utenti
-INSERT INTO utente (email, nome, cognome, password) VALUES
-('user1@example.com', 'Giulia', 'Verdi', 'user123'),
-('user2@example.com', 'Marco', 'Neri', 'pass456');
