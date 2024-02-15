@@ -1,5 +1,4 @@
--- Active: 1707994213672@@127.0.0.1@3306@gestione_treni
-
+-- Active: 1706612551839@@127.0.0.1@3306@gestione_treni
 -- Creazione delle tabelle
 
 CREATE DATABASE gestione_treni

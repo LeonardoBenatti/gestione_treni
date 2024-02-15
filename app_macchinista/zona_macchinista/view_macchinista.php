@@ -16,29 +16,8 @@
 
     echo "SONO LE ORE: " . $_SESSION["currentTime"] . " DI " . getDayOfWeek($_SESSION["currentDate"]) . " " . getItalianDate($_SESSION["currentDate"]) . "<br>";
 
-
-    if (isset($_POST["fascia"]) && isset($_POST["prima_sottotratta"])){
-        echo "<form action='view_macchinista.php' method='post'>
-                  <input name='ritardo' type='number' min='5' step='5' placeholder='ritardo' value='" . (isset($_POST['ritardo']) ? $_POST['ritardo'] : '') . "'> 
-                  <input name='aggiorna' type='submit' value='Invia'> 
-              </form>";
-
-        echo '<ul>';
-            foreach(getFasceOrarie($_SESSION["treno"], $connessione, $_POST["prima_sottotratta"]) as $sottotratta){
-                $stazione = getStaz($sottotratta['prima_stazione'], $connessione);
-                echo '<li>' . $stazione . '</li>';
-            }
-        echo '</ul>';
-              
-    } 
-    else{
-        echo "SELEZIONA UNA FASCIA ORARIA: <br>";
-        foreach(getFasceOrarie($_SESSION["treno"], $connessione, null) as $fascia_oraria){
-            echo "<form action = 'view_macchinista.php' method = 'post'>";
-                echo "<input type = 'submit' name = 'fascia' value = '" . $fascia_oraria["str"] . "'>";
-                echo "<input type = 'hidden' name = 'prima_sottotratta' value = '" . $fascia_oraria["first_id"] . "'>";
-            echo "</form>";
-        }
+    foreach(getFasceOrarie($_SESSION["treno"], $connessione, null) as $fascia_oraria){
+        echo '<pre>' . var_export($fascia_oraria, true) . '</pre>';
     }   
 
     if (isset($_POST["aggiorna"])){
@@ -46,7 +25,7 @@
     }
 
 
-    $test = getFasceOrarie($_SESSION["treno"], $connessione, $_POST["prima_sottotratta"]);
+    $test = getFasceOrarie($_SESSION["treno"], $connessione, null);
     //echo '<pre>' . var_export($test, true) . '</pre>'
 ?>
 
@@ -73,8 +52,6 @@
 
         return ($orarioTimestamp >= $inizioTimestamp && $orarioTimestamp <= $fineTimestamp);
     }
-
-
     // Dall'id della stazione, restituisce il nome della stazione, Dalla stringa del nome della stazione, restituisce l'id della stazione
     function getStaz($var, $connessione){
         $query = "";
@@ -164,7 +141,7 @@
         return $result[0]["tratta"];
     }
     /* Dall id del treno ($treno), restituisce le fasce orarie del treno, 
-    se $id_sottotratta è null restituisce la stirnga della fascia in key "str" e l'id della prima sotratta in key "first_id", 
+    se $id_sottotratta è null restituisce tutte le fascie orarie/sottotratte", 
     altrimenti restituisce le sottotratte partendo da $id_sottotratta*/
     function getFasceOrarie($treno, $connessione, $id_sottotratta){
         $query = "SELECT s.id, orario_partenza, orario_arrivo, s.prima_stazione AS '1staz', s.ultima_stazione AS '2staz', s.sottotratta_successiva, t.ultima_stazione AS 'capolinea' FROM sottotratta s
@@ -205,56 +182,12 @@
                 array_push($fascia, $result_sottotratta);
                 $prox = $result_sottotratta["sottotratta_successiva"];
             } 
-            if($id_sottotratta != null){
-                return $fascia;
-            }
-            else if($id_sottotratta === null){
-                $info = array();
-                $str = getStaz($fascia[0]["prima_stazione"], $connessione) . " - " . $fascia[0]["orario_partenza"] . " / " . getStaz($fascia[count($fascia) - 1]["ultima_stazione"], $connessione) . " - " . $fascia[count($fascia) - 1]["orario_arrivo"];
-                $first_id = $fascia[0]["id"];
-                $info['first_id'] = $first_id;
-                $info['str'] = $str;
-                array_push($fasce, $info);
-            }
-            
+            return $fascia;
         }
         //echo '<pre>' . var_export($fasce, true) . '</pre>';
         return $fasce;
     }
-    function getSottotratte($tratta, $connessione){
-        $query = "SELECT * FROM tratta 
-        WHERE id = ?";
-
-        $stmt = $connessione->prepare($query);
-        $stmt->bind_param("s", $tratta);
-        $stmt->execute();
-        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-
-        $prox = $result[0]["prima_stazione"];
-        $ultima_stazione = $result[0]["ultima_stazione"];
-
-        do{
-
-            $query_sottotratta = "SELECT * FROM sottotratta 
-                        WHERE id = ?
-                        AND tratta = ?";
-            
-            $stmt = $connessione->prepare($query_sottotratta);
-            $stmt->bind_param("ii", $prox, $tratta);
-            $stmt->execute();
-            $result_sottotratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-
-            echo "prox: " . $prox . "<br>";
-            echo "tratta: " . $tratta . "<br>";
-
-            echo getStaz($result_sottotratta[0]["prima_stazione"], $connessione);
-            
-            $prox = $result_sottotratta[0]["sottotratta_successiva"];
-
-        }while($prox != null);
-
-        return $result[0]["tratta"];
-    }
+    
 ?>
 
 
