@@ -33,7 +33,6 @@
             foreach(getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_sottotratta"]) as $sottotratta){
                 $stazione = getStaz($sottotratta['prima_stazione'], $connessione);
                 echo '<li>' . $stazione . ' - Ritardo: ' . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . ' - Ora: ' . $sottotratta['orario_partenza'] . '</li>';
-                echo $sottotratta['id'];
             }
     echo '</ul>';
 
