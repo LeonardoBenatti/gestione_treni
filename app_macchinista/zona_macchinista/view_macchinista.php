@@ -17,7 +17,12 @@
     echo "SONO LE ORE: " . $_SESSION["currentTime"] . " DI " . getDayOfWeek($_SESSION["currentDate"]) . " " . getItalianDate($_SESSION["currentDate"]) . "<br>";
 
     foreach(getFasceOrarie($_SESSION["treno"], $connessione, null) as $fascia_oraria){
-        echo '<pre>' . var_export($fascia_oraria, true) . '</pre>';
+        echo orarioInFasciaOraria($_SESSION['currentTime'], $fascia_oraria[0]['orario_partenza'], $fascia_oraria[count($fascia_oraria)-1]['orario_arrivo']);
+        if(orarioInFasciaOraria($_SESSION["currentTime"], $fascia_oraria[0]["orario_partenza"], $fascia_oraria[count($fascia_oraria)-1]["orario_arrivo"])){
+            $_SESSION["prima_tratta"] = $fascia_oraria[0]["id"];
+            echo "dio can";
+        }
+
     }   
 
     if (isset($_POST["aggiorna"])){
@@ -25,7 +30,7 @@
     }
 
 
-    $test = getFasceOrarie($_SESSION["treno"], $connessione, null);
+    //$test = getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_tratta"]);
     //echo '<pre>' . var_export($test, true) . '</pre>'
 ?>
 
@@ -182,7 +187,12 @@
                 array_push($fascia, $result_sottotratta);
                 $prox = $result_sottotratta["sottotratta_successiva"];
             } 
-            return $fascia;
+            if($id_sottotratta != null){
+                return $fascia;
+            }   
+            else{
+                array_push($fasce, $fascia);
+            }
         }
         //echo '<pre>' . var_export($fasce, true) . '</pre>';
         return $fasce;
