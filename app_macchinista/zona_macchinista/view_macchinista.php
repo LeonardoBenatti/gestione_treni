@@ -62,7 +62,18 @@
 </body>
 </html>
 
+
+
 <?php
+    // Se l'ora è dentro ad un range    
+    function orarioInFasciaOraria($orario, $inizio, $fine) {
+        $orarioTimestamp = strtotime($orario);
+        $inizioTimestamp = strtotime($inizio);
+        $fineTimestamp = strtotime($fine);
+
+        return ($orarioTimestamp >= $inizioTimestamp && $orarioTimestamp <= $fineTimestamp);
+    }
+
 
     // Dall'id della stazione, restituisce il nome della stazione, Dalla stringa del nome della stazione, restituisce l'id della stazione
     function getStaz($var, $connessione){
