@@ -16,8 +16,13 @@
 
     echo "SONO LE ORE: " . $_SESSION["currentTime"] . " DI " . getDayOfWeek($_SESSION["currentDate"]) . " " . getItalianDate($_SESSION["currentDate"]) . "<br>";
 
-    foreach(getFasceOrarie($_SESSION["treno"], $connessione, null) as $fascia_oraria){
-        if(orarioInFasciaOraria($_SESSION["currentTime"], $fascia_oraria[0]["orario_partenza"], $fascia_oraria[count($fascia_oraria)-1]["orario_arrivo"])){
+    
+    if (isset($_POST["aggiorna"])){
+        aggiornaRitardo($_POST["ritardo"], $_SESSION["treno"], 7, $connessione);
+    }
+
+    foreach(getFasceOrarie($_SESSION["treno"], $connessione, null) as $fascia_oraria){     //per ogni fascia oraria della tratta del $treno, se l'orario attuale è in una delle fasce orarie allora setta $_SESSION['prima_sottottratta']
+        if(orarioInFasciaOraria("16:00:00", $fascia_oraria[0]["orario_partenza"], $fascia_oraria[count($fascia_oraria)-1]["orario_arrivo"])){
             $_SESSION["prima_sottotratta"] = $fascia_oraria[0]["id"];
         }
 
@@ -30,15 +35,14 @@
           </form>"; 
 
     echo '<ul>';
+        if(isset($_SESSION["prima_sottotratta"])){
             foreach(getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_sottotratta"]) as $sottotratta){
                 $stazione = getStaz($sottotratta['prima_stazione'], $connessione);
                 echo '<li>' . $stazione . ' - Ritardo: ' . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . ' - Ora: ' . $sottotratta['orario_partenza'] . '</li>';
             }
+            //unset($_SESSION["prima_sottotratta"]);   //Ha senso?
+        }
     echo '</ul>';
-
-    if (isset($_POST["aggiorna"])){
-        aggiornaRitardo($_POST["ritardo"], $_SESSION["treno"], 7, $connessione);
-    }
 
 
     //$test = getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_tratta"]);
