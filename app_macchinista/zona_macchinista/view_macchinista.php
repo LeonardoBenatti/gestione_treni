@@ -16,9 +16,12 @@
 
     echo "SONO LE ORE: " . $_SESSION["currentTime"] . " DI " . getDayOfWeek($_SESSION["currentDate"]) . " " . getItalianDate($_SESSION["currentDate"]) . "<br>";
 
+    if (isset($_POST["sottotratta_raggiunta"])){
+        $_SESSION["sottotratta_raggiunta"] = $_POST["sottotratta_raggiunta"];
+    }
     
-    if (isset($_POST["aggiorna"])){
-        aggiornaRitardo($_POST["ritardo"], $_SESSION["treno"], 7, $connessione);
+    if (isset($_POST["s"])){
+        aggiornaRitardo($_POST["ritardo"], $_SESSION["treno"], $_POST["sottotratta_raggiunta"], $connessione);
     }
 
     foreach(getFasceOrarie($_SESSION["treno"], $connessione, null) as $fascia_oraria){     //per ogni fascia oraria della tratta del $treno, se l'orario attuale è in una delle fasce orarie allora setta $_SESSION['prima_sottottratta']
@@ -34,15 +37,17 @@
                   <input name='aggiorna' type='submit' value='Invia'> 
           </form>"; 
 
-    echo '<ul>';
-        if(isset($_SESSION["prima_sottotratta"])){
-            foreach(getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_sottotratta"]) as $sottotratta){
+    if(isset($_SESSION["prima_sottotratta"])){
+        foreach(getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_sottotratta"]) as $sottotratta){
+            echo "<form action='view_macchinista.php' method='post'>";
                 $stazione = getStaz($sottotratta['prima_stazione'], $connessione);
-                echo '<li>' . $stazione . ' - Ritardo: ' . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . ' - Ora: ' . $sottotratta['orario_partenza'] . '</li>';
-            }
-            //unset($_SESSION["prima_sottotratta"]);   //Ha senso?
+                echo "<input name = 'button' type = 'submit' value = '" . $stazione . ' - Ritardo: ' . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . ' - Ora: ' . $sottotratta['orario_partenza'] . "' = > <br>";
+                echo "<input name = 'sottotratta_raggiunta' type = 'hidden' value = '" . $sottotratta['id'] . "'>";
+            echo '</form>';
         }
-    echo '</ul>';
+        //unset($_SESSION["prima_sottotratta"]);   //Ha senso?
+    }
+   
 
 
     //$test = getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_tratta"]);
