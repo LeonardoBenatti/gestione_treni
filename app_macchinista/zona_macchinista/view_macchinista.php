@@ -19,6 +19,10 @@
     if (isset($_POST["sottotratta_raggiunta"])){
         $_SESSION["sottotratta_raggiunta"] = $_POST["sottotratta_raggiunta"];
     }
+
+    if (isset($_POST["stazione_raggiunta"])){
+        $_SESSION["stazione_raggiunta"] = $_POST["stazione_raggiunta"];
+    }
     
     if (isset($_POST["s"])){
         aggiornaRitardo($_POST["ritardo"], $_SESSION["treno"], $_POST["sottotratta_raggiunta"], $connessione);
@@ -38,12 +42,32 @@
           </form>"; 
 
     if(isset($_SESSION["prima_sottotratta"])){
-        foreach(getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_sottotratta"]) as $sottotratta){
-            echo "<form action='view_macchinista.php' method='post'>";
+        $tratta = getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_sottotratta"]);
+        foreach($tratta as $sottotratta){
+            if($sottotratta == $tratta[0]){
                 $stazione = getStaz($sottotratta['prima_stazione'], $connessione);
-                echo "<input name = 'button' type = 'submit' value = '" . $stazione . ' - Ritardo: ' . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . ' - Ora: ' . $sottotratta['orario_partenza'] . "' = > <br>";
-                echo "<input name = 'sottotratta_raggiunta' type = 'hidden' value = '" . $sottotratta['id'] . "'>";
+                echo "<form action='view_macchinista.php' method='post'>";
+                    echo "<input name = 'button' type = 'submit' value = '" . $stazione . ' - Ritardo: ' . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . ' - Ora: ' . $sottotratta['orario_partenza'] . "' = > <br>";
+                    echo "<input name = 'sottotratta_raggiunta' type = 'hidden' value = '" . $sottotratta['id'] . "'>";
+                    echo "<input name = 'stazione_raggiunta' type = 'hidden' value = '" . $stazione . "'>";
+                    echo  $sottotratta['id'];
+                echo '</form>';
+            }
+            
+
+            $stazione = getStaz($sottotratta['ultima_stazione'], $connessione);
+                echo "<form action='view_macchinista.php' method='post'>";
+                if ($stazione == $_SESSION["stazione_raggiunta"]) {
+                    echo "<input id='stazione_raggiunta' name='button' type='submit' value='" . $stazione . " - Ritardo: " . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . " - Ora: " . $sottotratta['orario_partenza'] . "'> <br>";
+                } else {
+                    echo "<input id='stazione' name='button' type='submit' value='" . $stazione . " - Ritardo: " . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . " - Ora: " . $sottotratta['orario_partenza'] . "'> <br>";
+                }
+                echo "<input name = 'sottotratta_raggiunta' type = 'hidden' value = '" . $sottotratta['sottotratta_successiva'] . "'>";
+                echo "<input name = 'stazione_raggiunta' type = 'hidden' value = '" . $stazione . "'>";
+                echo  $sottotratta['sottotratta_successiva'];
             echo '</form>';
+        
+            
         }
         //unset($_SESSION["prima_sottotratta"]);   //Ha senso?
     }
@@ -61,6 +85,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>view_macchinista</title>
 </head>
+<style>
+    .stazione{
+        background-color: #f2f2f2;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 10px;
+    }
+    .stazione_raggiunta{
+        background-color: #f2f2f2;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 10px;
+        color: red;
+    
+    }
+</style>
 <body>
     
 </body>
