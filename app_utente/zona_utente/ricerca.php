@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cerca il tuo treno</title>
 </head>
+<link rel="stylesheet" href="../stylesheets/ricerca.css">
 <body>
     <form action="soluzioni.php" method="post">
 
@@ -15,7 +16,7 @@
     <button type="submit" name = "cerca">cerca</button>
 
     </form>
-    <button onclick="invertiContenuti()">inverti</button>
+    <img id="img" width="30vh" onclick="invertiContenuti()" src="../Images/invert.png">
 
     <script>
         function invertiContenuti() {
