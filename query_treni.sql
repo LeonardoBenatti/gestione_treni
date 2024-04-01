@@ -1,10 +1,10 @@
--- Active: 1707994213672@@127.0.0.1@3306@gestione_treni
+-- Active: 1710091988140@@127.0.0.1@3306
 
 -- Creazione delle tabelle
 
-CREATE DATABASE gestione_treni
+CREATE DATABASE IF NOT EXISTS gestione_treni
 
-
+USE gestione_treni;
 
 CREATE TABLE stazione (
     id INT AUTO_INCREMENT,
@@ -24,7 +24,9 @@ CREATE TABLE tratta (
 CREATE TABLE treno (
     id VARCHAR(30),
     tratta INT,
+    stazione INT,
     FOREIGN KEY (tratta) REFERENCES tratta(id),
+    FOREIGN KEY (stazione) REFERENCES stazione(id),
     PRIMARY KEY (id)
 );
 
