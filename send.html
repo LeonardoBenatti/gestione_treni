@@ -1,0 +1,46 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+
+<h2>Login</h2>
+<form id="loginForm">
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email"><br><br>
+    <button type="submit">Send Email</button>
+</form>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    var email = document.getElementById("email").value;
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "send_email.php");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                alert(xhr.responseText);
+            } else {
+                alert("Failed to send email. Please try again.");
+            }
+        }
+    };
+
+    xhr.send(JSON.stringify({ email: email }));
+});
+
+</script>
+</body>
+</html>
