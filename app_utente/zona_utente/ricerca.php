@@ -11,13 +11,17 @@
     <div id = "container">
         
         <form action="soluzioni.php" method="post">
-            <h1>Cerca la soluzione ideale per te:</h1>
+            <h1>Cerca una soluzione :</h1>
 
             <input id = "partenza" type="text" name = "partenza" placeholder="Partenza">
             <br>
             <input id = "destinazione" type="text" name = "destinazione" placeholder="Destinazione">
             <br>
-            <button type="submit" name = "Cerca">Cerca</button>
+
+            <div id = "submit_box">
+                <button type="submit" name = "Cerca">Cerca</button>
+            </div>
+
             <div id = "inverti">
                 <img id="inverti_img" onclick="invertiContenuti()" src="../imgs/invert.png">
             </div>
