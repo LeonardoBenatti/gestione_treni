@@ -24,6 +24,7 @@
 </head>
 <link rel="stylesheet" href="stylesheets/login.css">
 <body>
+<div class = "blur-overlay"></div>
 <div class="container">
     <div class="login-box">
         <h2>Login</h2>
@@ -38,11 +39,14 @@
                 <input type="password" name="password" style = "<?php if(isset($_POST["password"]) && $_POST["password"] == ""){echo "border: 2px solid red;";} ?>">
             </div>
 
-            <div class="input-box" style = "text-transform: uppercase;">
+            <div id = "lnk" class="input-box">
                 <a href = "login_utente/registrazione.php">non sei registrato? registrati</label>
             </div>
 
-            <input id="login-button" type="submit" name = "login" value = "Login">
+            <div id = "submit-box" class="input-box">
+                <button id="login-button" type="submit" name = "login">Login</button>
+            </div>
+            
         </form>
     </div>
 </div>

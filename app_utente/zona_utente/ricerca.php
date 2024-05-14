@@ -7,16 +7,23 @@
 </head>
 <link rel="stylesheet" href="../stylesheets/ricerca.css">
 <body>
-    <form action="soluzioni.php" method="post">
+    <div class = "blur-overlay"></div>
+    <div id = "container">
+        
+        <form action="soluzioni.php" method="post">
+            <h1>Cerca la soluzione ideale per te:</h1>
 
-    <input id = "partenza" type="text" name = "partenza" placeholder="partenza">
-    <br>
-    <input id = "destinazione" type="text" name = "destinazione" placeholder="destinazione">
-    <br>
-    <button type="submit" name = "cerca">cerca</button>
-
-    </form>
-    <img id="img" width="30vh" onclick="invertiContenuti()" src="../Images/invert.png">
+            <input id = "partenza" type="text" name = "partenza" placeholder="Partenza">
+            <br>
+            <input id = "destinazione" type="text" name = "destinazione" placeholder="Destinazione">
+            <br>
+            <button type="submit" name = "Cerca">Cerca</button>
+            <div id = "inverti">
+                <img id="inverti_img" onclick="invertiContenuti()" src="../imgs/invert.png">
+            </div>
+        </form>
+        
+    </div>
 
     <script>
         function invertiContenuti() {
