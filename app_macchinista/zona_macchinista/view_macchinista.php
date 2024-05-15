@@ -19,14 +19,23 @@ echo "SONO LE ORE: " . $_SESSION["currentTime"] . " DI " . getDayOfWeek($_SESSIO
 if (isset ($_POST["sottotratta_raggiunta"])) {
     $_SESSION["sottotratta_raggiunta"] = $_POST["sottotratta_raggiunta"];
 }
+else if (!isset ($_SESSION["sottotratta_raggiunta"]) && !isset ($_SESSION["sottotratta_raggiunta"]) && isset ($_SESSION["prima_sottotratta"])) {
+    $_SESSION["sottotratta_raggiunta"] = $_SESSION["prima_sottotratta"];
+}
 
 if (isset ($_POST["stazione_raggiunta"])) {
     $_SESSION["stazione_raggiunta"] = $_POST["stazione_raggiunta"];
     setStazione($_SESSION["treno"], $_SESSION["stazione_raggiunta"], $connessione);
-
+    
+}
+else if(!isset ($_SESSION["stazione_raggiunta"]) && !isset($_POST["stazione_raggiunta"]) && isset ($_SESSION["prima_sottotratta"])) {
+    echo "prima sottotratta: ";
+    echo "<pre>" . var_export(getSottotratta($_SESSION["prima_sottotratta"], $connessione), true) . "</pre>";
+    $_SESSION["stazione_raggiunta"] = getStaz(getSottotratta($_SESSION["prima_sottotratta"], $connessione)["prima_stazione"], $connessione);
 }
 
 if (isset ($_POST["ritardo"])) {
+    //echo "ritardo: ";
     aggiornaRitardo($_POST["ritardo"], $_SESSION["treno"], $_SESSION["sottotratta_raggiunta"], $connessione);
 }
 
@@ -39,17 +48,20 @@ foreach (getFasceOrarie($_SESSION["treno"], $connessione, null) as $fascia_orari
 
 echo "<form action='view_macchinista.php' method='post'>
                   <label>Ritado: </label>
-                  <input name='ritardo' type='number' min='5' step='5' placeholder='ritardo' value = '" . getRitardo($_SESSION["treno"], $_SESSION["sottotratta_raggiunta"], $connessione) . "'> 
+                  <input name='ritardo' type='number' min='0' step='5' placeholder='ritardo' value = '" . getRitardo($_SESSION["treno"], $_SESSION["sottotratta_raggiunta"], $connessione) . "'> 
                   <input name='aggiorna' type='submit' value='Invia'> 
           </form>";
 
 if (isset ($_SESSION["prima_sottotratta"])) {
     $tratta = getFasceOrarie($_SESSION["treno"], $connessione, $_SESSION["prima_sottotratta"]);
     foreach ($tratta as $sottotratta) {
+        //echo $_SESSION["stazione_raggiunta"];
+        //questa parte è solo per la prima stazione della tratta
         if ($sottotratta == $tratta[0]) {
             $stazione = getStaz($sottotratta['prima_stazione'], $connessione);
             echo "<form action='view_macchinista.php' method='post'>";
             if ($stazione == $_SESSION["stazione_raggiunta"]) {
+               
                 echo "<input class='stazione_raggiunta' name='button' type='submit' value='" . $stazione . " - Ritardo: " . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . " - Ora: " . $sottotratta['orario_partenza'] . "'> <br>";
             } else {
                 echo "<input class='stazione' name='button' type='submit' value='" . $stazione . " - Ritardo: " . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . " - Ora: " . $sottotratta['orario_partenza'] . "'> <br>";
@@ -60,6 +72,7 @@ if (isset ($_SESSION["prima_sottotratta"])) {
             echo '</form>';
         }
 
+        //questa parte è per tutte le stazioni della tratta tranne la prima
         $stazione = getStaz($sottotratta['ultima_stazione'], $connessione);
         echo "<form action='view_macchinista.php' method='post'>";
         if ($stazione == $_SESSION["stazione_raggiunta"]) {
@@ -110,12 +123,9 @@ if (isset ($_SESSION["prima_sottotratta"])) {
 </style>
 
 <body>
-
 </body>
 
 </html>
-
-
 
 <?php
 // Se l'ora è dentro ad un range    
@@ -211,8 +221,9 @@ function aggiornaRitardo($ritardo, $treno, $sottotratta, $connessione)
     $currentDate = date('Y-m-d');
     $ritardo = intval($ritardo);
     $sottotratta_successiva = 0;
-
-    while ($sottotratta_successiva != null) {
+    
+    while ($sottotratta_successiva !== null) {
+        //echo $sottotratta_successiva . "<br>";
         $query = "SELECT sottotratta_successiva FROM sottotratta 
                             WHERE id = ?";
 
@@ -220,28 +231,42 @@ function aggiornaRitardo($ritardo, $treno, $sottotratta, $connessione)
         $stmt->bind_param("s", $sottotratta);
         $stmt->execute();
         $sottotratta_successiva = $stmt->get_result()->fetch_assoc();
+        $sottotratta_successiva = $sottotratta_successiva["sottotratta_successiva"];
+
 
 
         $query = "SELECT * FROM ritardo 
                     WHERE treno = ?
-                    AND data = ?";
+                    AND data = ?
+                    AND sottotratta = ?";
 
         $stmt = $connessione->prepare($query);
-        $stmt->bind_param("ss", $treno, $currentDate);
+        $stmt->bind_param("sss", $treno, $currentDate, $sottotratta);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-        if (empty ($result)) {
+        //echo "<pre>" . var_export($result, true) . "</pre>";
+
+        if (empty ($result) && $ritardo != 0) {
             $query = "INSERT INTO ritardo (minuti, treno, data, sottotratta) 
                         VALUES (?, ?, ?, ?)";
             $stmt = $connessione->prepare($query);
             $stmt->bind_param("isss", $ritardo, $treno, $currentDate, $sottotratta);
             $stmt->execute();
         } else {
-            $query = "UPDATE ritardo SET minuti = ? WHERE id = ?";
-            $stmt = $connessione->prepare($query);
-            $stmt->bind_param("ii", $ritardo, $result[0]["id"]);
-            $stmt->execute();
+            if($ritardo != 0){
+                $query = "UPDATE ritardo SET minuti = ? WHERE id = ?";
+                $stmt = $connessione->prepare($query);
+                $stmt->bind_param("ii", $ritardo, $result[0]["id"]);
+                $stmt->execute();
+            }
+            else {
+                $query = "DELETE FROM ritardo WHERE id = ?";
+                $stmt = $connessione->prepare($query);
+                $stmt->bind_param("i", $result[0]["id"]);
+                $stmt->execute();
+            }
+
         }
         $sottotratta = $sottotratta_successiva;
     }
@@ -346,6 +371,19 @@ function setStazione($treno, $stazione, $connessione)
     $stmt = $connessione->prepare($query);
     $stmt->bind_param("ss", $stazione, $treno);
     $stmt->execute();
+}
+//ritorna tutte le informazioni riguardanti la sottotratta con id = $id_sottotratta
+function getSottotratta($id_sottotratta, $connessione)
+{
+    $query = "SELECT * FROM sottotratta 
+                WHERE id = ?";
+
+    $stmt = $connessione->prepare($query);
+    $stmt->bind_param("s", $id_sottotratta);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+    return $result[0];
 }
 
 ?>
