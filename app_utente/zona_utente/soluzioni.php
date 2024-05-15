@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="../stylesheets/soluzioni.css">
+<body>
+    <div class = "blur-overlay"></div>
+    <div id = "container">
+        <h1 id = "titolo">Soluzioni da <?php echo $_POST["partenza"]; ?> a <?php echo $_POST["destinazione"]; ?></h1>
+
+        <div id = "soluzioni">
 <?php
     session_start();
 
@@ -125,15 +139,9 @@
 
     
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<link rel="stylesheet" href="../stylesheets/soluzioni.css">
-<body>
+</div>
+</div>
+
     
 </body>
 </html>

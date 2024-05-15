@@ -20,6 +20,8 @@ body {
     -webkit-filter: blur(6px);
     filter: blur(6px);
     z-index: -1; 
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #container {
@@ -69,7 +71,6 @@ button {
     border-radius: 6px;
     cursor: pointer;
     box-shadow: 0px 2px 2px rgb(0, 0, 0, 0.288);
-    
     transition: all 0.3s;
 }
 
@@ -97,6 +98,8 @@ button:hover {
 #inverti:hover{
     opacity: 1;
     box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.516);
+    outline: 8px solid #007bff;
+    background-color: #6eb4ff;
 
 }
 

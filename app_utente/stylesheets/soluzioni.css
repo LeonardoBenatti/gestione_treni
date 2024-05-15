@@ -1,32 +1,81 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0;
-    padding: 0;
+    background-color: #000000;
+    height: 100vh;
+    width: 100vw;
+
 }
 
-form {
-    margin-top: 20px;
+.blur-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 101%;
+    height: 100%;
+    background-image: url("../imgs/subway-dark-atmosphere.jpg");
+    background-size: cover;
+    opacity: 0.8;
+    -webkit-filter: blur(6px);
+    filter: blur(6px);
+    z-index: -1; 
+    background-position: center;
+    background-repeat: no-repeat;
+
 }
 
-input[type="text"] {
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+#container {
+    padding: 2vw;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 0.8vw;
+    border: 5px solid #a3a3a3;
+    min-width: fit-content;
+    min-height: fit-content;
+    width: 25vw;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#container #titolo {
+    font-size: 2vw;
+    margin-bottom: 2vw;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#container #soluzioni{
+    border-top: 2px solid #a3a3a3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 80%;
+    overflow-y: auto;
+    width: 100%;
+    padding: 2vh;
 }
 
 button[type="submit"] {
-    padding: 8px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 2vw;
+    background-color: rgb(255, 255, 255);
+    border-radius: 0.8vw;
+    border: 5px solid #6eb4ff;
+    min-width: fit-content;
+    min-height: fit-content;
+    width: 25vw;
+    position: relative;
+    padding-right: 4vw;
+    margin: 1vh;
+    transition: all 0.3s;
+    font-size: 1.5em;
+    text-transform: uppercase;
 }
 
 button[type="submit"]:hover {
-    background-color: #0056b3;
+    border: 5px solid #007bff;
 }
 
 .hidden {
