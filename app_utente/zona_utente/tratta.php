@@ -7,7 +7,7 @@
 
     $connessione = new mysqli($hostname, $username, $password, $database);
 
-    echo "Tratta selezionata: " . $_POST["tratta"] . "<br><br>";
+    //echo "Tratta selezionata: " . $_POST["tratta"] . "<br><br>";
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tratte_utili = $_POST["tratte_utili"];
@@ -87,33 +87,41 @@
     <title>Tratta</title>
     <link rel="stylesheet" href="../stylesheets/tratta.css">
 </head>
-<body>
+    <div class="blur-overlay"></div>
+    <div id = "container">
     <table>
         <thead>
             <tr>
-                <th>Partenza da</th>
+                <th>Stazione</th>
                 <th>Orario partenza previsto</th>
-                <th>Orario arrivo previsto</th>
-                <th>Destinazione</th>
                 <th>Ritardo (minuti)</th>
+                
             </tr>
         </thead>
         <tbody>
             <?php foreach($sottratte as $sottotratta): ?>
                 <tr>
+                    <?php var_dump($tratte_utili); ?>
                     <?php if(in_array($sottotratta["id"], $tratte_utili)): ?>
                         <td>DA PERCORRERE</td>
-                    <?php else: ?>
-                        <td><?php echo getStaz($sottotratta["prima_stazione"], $connessione); ?></td>
                     <?php endif; ?>
+                        <td><?php echo getStaz($sottotratta["prima_stazione"], $connessione); ?></td>
+                    <?php //endif; ?>
                     <td><?php echo $sottotratta["orario_partenza"]; ?></td>
-                    <td><?php echo $sottotratta["orario_arrivo"]; ?></td>
-                    <td><?php echo getStaz($sottotratta["ultima_stazione"], $connessione); ?></td>
                     <td><?php echo $sottotratta["minuti"]; ?></td>
+                    
                 </tr>
+                <?php  if($sottotratta["ultima_stazione"] == $capolinea): ?>
+                        <tr>
+                            <td><?php echo getStaz($sottotratta["ultima_stazione"], $connessione); ?></td>
+                            <td> <?php echo $sottotratta["orario_arrivo"]  ?> </td>  
+                            <td><?php echo getStaz($sottotratta["minuti"], $connessione);endif;?></td>
+                        </tr>
+                            
             <?php endforeach; ?>
         </tbody>
     </table>
+    </div> 
 </body>
 </html>
 
