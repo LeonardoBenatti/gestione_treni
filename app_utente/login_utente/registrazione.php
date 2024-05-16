@@ -7,12 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 </head>
-<link rel="stylesheet" href="../stylesheets/login.css">
+<link rel="stylesheet" href="../stylesheets/registrazione.css">
 <body>
+<div class = "blur-overlay"></div>
 <div class="container">
     <div class="login-box">
         <h2>Registazione</h2>
-        <form action="check.php" method="post" style = "height: 90vh;"> 
+        <form action="check.php" method="post"> 
 
             <div class="input-box">
                 <label>Email</label>

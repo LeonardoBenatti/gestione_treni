@@ -27,16 +27,12 @@ body {
     text-align: center;
 }
 
-form {
-    height: min-content;
-}
-
 .login-box {
     width: 25vw;
     padding: 1.5vw;
     background-color: rgba(255, 255, 255, 0.85);
     border: 5px solid #bababa;
-    height: 40vh;
+    height: 55vh;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -47,6 +43,10 @@ form {
     margin: -3.5vw 0 -5vw;
     color: #000000;
     font-size: 300%;
+}
+
+form {
+    height: min-content;
 }
 
 .input-box {

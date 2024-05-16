@@ -61,7 +61,8 @@
     $sottratte = array();
 
     while($partenza != $capolinea){
-        $query_sottotratta = "SELECT * FROM sottotratta s
+        $query_sottotratta = "SELECT s.id, s.tratta, s.orario_partenza, s.orario_arrivo, s. prima_stazione, s.ultima_stazione, s.sottotratta_successiva, r.minuti, r.treno, r.data 
+                        FROM sottotratta s
                         LEFT JOIN ritardo r ON s.id = r.sottotratta
                             WHERE s.prima_stazione = ?
                             AND s.tratta = ?
@@ -71,6 +72,8 @@
         $stmt->bind_param("iii", $partenza, $tratta, $sott_succ);
         $stmt->execute();
         $result_sottotratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        //echo "<pre style = 'color: white'>" . var_export($result_sottotratta, true) . "</pre>";
 
         array_push($sottratte, $result_sottotratta[0]);
         $sott_succ = $result_sottotratta[0]["sottotratta_successiva"];
@@ -99,14 +102,21 @@
             </tr>
         </thead>
         <tbody>
+        <?php //var_dump($tratte_utili); ?>
+        <?php //echo "<pre>" . var_export($sottratte, true) . "</pre>" ?>
+        <?php $c = 0; ?>
             <?php foreach($sottratte as $sottotratta): ?>
                 <tr>
-                    <?php var_dump($tratte_utili); ?>
-                    <?php if(in_array($sottotratta["id"], $tratte_utili)): ?>
-                        <td>DA PERCORRERE</td>
+                    <?php if(in_array($sottotratta["id"], $tratte_utili) || $c == count($tratte_utili)): ?>
+                        <td style = "color: red"><?php echo getStaz($sottotratta["prima_stazione"], $connessione);
+                        $c++;?>
+
+                    <?php else: ?>
+                        <td><?php echo getStaz($sottotratta["prima_stazione"], $connessione); 
+                        $c ++;?>
+
                     <?php endif; ?>
-                        <td><?php echo getStaz($sottotratta["prima_stazione"], $connessione); ?></td>
-                    <?php //endif; ?>
+
                     <td><?php echo $sottotratta["orario_partenza"]; ?></td>
                     <td><?php echo $sottotratta["minuti"]; ?></td>
                     
@@ -115,7 +125,7 @@
                         <tr>
                             <td><?php echo getStaz($sottotratta["ultima_stazione"], $connessione); ?></td>
                             <td> <?php echo $sottotratta["orario_arrivo"]  ?> </td>  
-                            <td><?php echo getStaz($sottotratta["minuti"], $connessione);endif;?></td>
+                            <td><?php echo $sottotratta["minuti"];endif;?></td>
                         </tr>
                             
             <?php endforeach; ?>
