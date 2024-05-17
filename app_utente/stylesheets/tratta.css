@@ -4,8 +4,10 @@ body {
     align-items: center;
     margin: 0;
     background-color: #000000;
-    height: 100vh;
-    width: 100vw;
+    min-height: 100vh;
+    width: 99%;
+    max-width: 99%;
+
 
 }
 
@@ -33,6 +35,8 @@ body {
     border: 5px solid #a3a3a3;
     width: 60vw;
     height: min-content;
+    min-width: fit-content;
+    max-width: 99%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -115,3 +119,26 @@ table {
 .button-container button:hover {
     background-color: #0056b3;
 }
+
+.stazione{
+  display: flex;
+  flex-direction: row;
+}
+
+.stato{
+    color: #ff0000;
+    min-width: 25%;
+    max-width: 25%;
+}
+
+.freccia_giu{
+  width: fit-content;
+  max-width: 100%;
+  width: 100%;
+  /*mantieni sempe le proprorzioni originali delll'immagine*/
+  height: auto;
+
+
+}
+
+
