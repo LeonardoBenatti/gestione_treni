@@ -97,6 +97,7 @@ while ($partenza != $capolinea) {
                     $tratta[0]["ultima_stazione"] = getStaz($tratta[0]["ultima_stazione"], $connessione);
                     echo "<pre>" . var_export($tratta, true) . "</pre>";
                 }*/
+                
 
                 $c = 0;
                 foreach ($sottratte as $sottotratta): ?>
@@ -104,17 +105,23 @@ while ($partenza != $capolinea) {
                         <?php if (in_array($sottotratta["id"], $tratte_utili) || $c == count($tratte_utili)): ?>
                             <td class="stazione"><?php echo getStaz($sottotratta["prima_stazione"], $connessione); $c++; ?>
                                 <div class="stato">
-                                    <img class="freccia_giu" src="../imgs/freccia_giu.png" alt="TAPPA">
+                                    <?php if(count($tratte_utili) + 1 != $c): ?>
+                                        <img class="freccia_giu" src="../imgs/freccia_giu.png" alt="TAPPA">
+                                    <?php else: ?>
+                                        <img class="freccia_giu" src="../imgs/destinazione.png" alt="DESTINAZIONE">
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         <?php else: ?>
-                            <td class="stazione" style="color: grey"><?php echo getStaz($sottotratta["prima_stazione"], $connessione); $c++; ?>
+                            <td class="stazione" style="color: grey"><?php echo getStaz($sottotratta["prima_stazione"], $connessione); ; ?>
                                 <div class="stato"></div>
                             </td>
                         <?php endif; ?>
                         <td><?php echo $sottotratta["orario_partenza"]; ?></td>
                         <td><?php echo $sottotratta["minuti"]; ?></td>
                     </tr>
+
+
                     <?php if ($sottotratta["ultima_stazione"] == $capolinea): ?>
                         <tr>
                             <?php if (in_array($sottotratta["id"], $tratte_utili) || $c == count($tratte_utili)): ?>
