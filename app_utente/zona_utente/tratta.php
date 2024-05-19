@@ -13,6 +13,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $tratta = $_POST["tratta"];
 
+$query = "SELECT id FROM treno WHERE tratta = ?";
+$stmt = $connessione->prepare($query);
+$stmt->bind_param("i", $tratta);
+$stmt->execute();
+$treno = $stmt->get_result()->fetch_all(MYSQLI_ASSOC)[0]["id"];
+
 $query = "SELECT * FROM sottotratta WHERE id = ?";
 $stmt = $connessione->prepare($query);
 $stmt->bind_param("i", $_POST["prima_sottotratta"]);
@@ -65,16 +71,20 @@ while ($partenza != $capolinea) {
     $sott_succ = $result_sottotratta[0]["sottotratta_successiva"];
     $partenza = $result_sottotratta[0]["ultima_stazione"];
 }
+
+$posizione = posizioneTreno($treno, $connessione);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tratta</title>
     <link rel="stylesheet" href="../stylesheets/tratta.css">
 </head>
+
 <body>
     <div class="blur-overlay"></div>
     <div id="container">
@@ -90,31 +100,40 @@ while ($partenza != $capolinea) {
                 <?php
                 // Debugging output
                 //echo "<pre>" . var_export($tratte_utili, true) . "</pre>";
-
+                
                 /*foreach ($tratte_utili as $tratta) {
                     $tratta = getSottotratta($tratta, $connessione);
                     $tratta[0]["prima_stazione"] = getStaz($tratta[0]["prima_stazione"], $connessione);
                     $tratta[0]["ultima_stazione"] = getStaz($tratta[0]["ultima_stazione"], $connessione);
                     echo "<pre>" . var_export($tratta, true) . "</pre>";
                 }*/
-                
+
 
                 $c = 0;
                 foreach ($sottratte as $sottotratta): ?>
                     <tr>
                         <?php if (in_array($sottotratta["id"], $tratte_utili) || $c == count($tratte_utili)): ?>
-                            <td class="stazione"><?php echo getStaz($sottotratta["prima_stazione"], $connessione); $c++; ?>
+                            <td class="stazione"><?php echo getStaz($sottotratta["prima_stazione"], $connessione);
+                            $c++; ?>
                                 <div class="stato">
-                                    <?php if(count($tratte_utili) + 1 != $c): ?>
-                                        <img class="freccia_giu" src="../imgs/freccia_giu.png" alt="TAPPA">
+                                    <?php if ($sottotratta["prima_stazione"] == $posizione): ?>
+                                        <img class="img_stato" src="../imgs/treno.jpg" alt="POS_ATTUALE">
+                                    <?php elseif (count($tratte_utili) + 1 != $c): ?>
+                                        <img class="img_stato" src="../imgs/freccia_giu.png" alt="TAPPA">
                                     <?php else: ?>
-                                        <img class="freccia_giu" src="../imgs/destinazione.png" alt="DESTINAZIONE">
+                                        <img class="img_stato" src="../imgs/destinazione.png" alt="DESTINAZIONE">
                                     <?php endif; ?>
                                 </div>
                             </td>
                         <?php else: ?>
-                            <td class="stazione" style="color: grey"><?php echo getStaz($sottotratta["prima_stazione"], $connessione); ; ?>
-                                <div class="stato"></div>
+                            <td class="stazione" style="color: grey">
+                                <?php echo getStaz($sottotratta["prima_stazione"], $connessione);
+                                ; ?>
+                                <div class="stato">
+                                <?php if ($sottotratta["prima_stazione"] == $posizione): ?>
+                                        <img class="img_stato" src="../imgs/treno.jpg" alt="POS_ATTUALE">
+                                <?php endif; ?>
+                                </div>
                             </td>
                         <?php endif; ?>
                         <td><?php echo $sottotratta["orario_partenza"]; ?></td>
@@ -125,16 +144,30 @@ while ($partenza != $capolinea) {
                     <?php if ($sottotratta["ultima_stazione"] == $capolinea): ?>
                         <tr>
                             <?php if (in_array($sottotratta["id"], $tratte_utili) || $c == count($tratte_utili)): ?>
-                                <td class="stazione"><?php echo getStaz($sottotratta["ultima_stazione"], $connessione); $c++; ?>
+                                <td class="stazione"><?php echo getStaz($sottotratta["ultima_stazione"], $connessione);
+                                $c++; ?>
                                     <div class="stato">
-                                        <img class="freccia_giu" src="../imgs/freccia_giu.png" alt="TAPPA">
+                                        <?php if ($sottotratta["ultima_stazione"] == $posizione): ?>
+                                            <img class="img_stato" src="../imgs/treno.jpg" alt="POS_ATTUALE">
+                                        <?php elseif (count($tratte_utili) + 1 != $c): ?>
+                                            <img class="img_stato" src="../imgs/freccia_giu.png" alt="TAPPA">
+                                            
+                                        <?php else: ?>
+                                            <img class="img_stato" src="../imgs/destinazione.png" alt="DESTINAZIONE">
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                                 <td><?php echo $sottotratta["orario_arrivo"]; ?></td>
                                 <td><?php echo $sottotratta["minuti"]; ?></td>
                             <?php else: ?>
-                                <td class="stazione" style="color: grey"><?php echo getStaz($sottotratta["ultima_stazione"], $connessione); $c++; ?>
-                                    <div class="stato"></div>
+                                <td class="stazione" style="color: grey">
+                                    <?php echo getStaz($sottotratta["ultima_stazione"], $connessione);
+                                    $c++; ?>
+                                    <div class="stato">
+                                        <?php if ($sottotratta["ultima_stazione"] == $posizione): ?>
+                                            <img class="img_stato" src="../imgs/treno.jpg" alt="POS_ATTUALE">
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                                 <td><?php echo $sottotratta["orario_arrivo"]; ?></td>
                                 <td><?php echo $sottotratta["minuti"]; ?></td>
@@ -144,12 +177,18 @@ while ($partenza != $capolinea) {
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <a href="soluzioni.php" id="back">
+            <img id = "img_back" src="../imgs/indietro.png" alt="indietro">
+        </a>
     </div>
+
 </body>
+
 </html>
 
 <?php
-function getStaz($var, $connessione) {
+function getStaz($var, $connessione)
+{
     $query = "";
     $param_type = "";
     $what = "";
@@ -171,7 +210,8 @@ function getStaz($var, $connessione) {
     return $result[0][$what] ?? null;
 }
 
-function getSottotratta($var, $connessione) {
+function getSottotratta($var, $connessione)
+{
     $query = "SELECT prima_stazione, ultima_stazione FROM sottotratta WHERE id = ?";
     $stmt = $connessione->prepare($query);
     $stmt->bind_param("i", $var);
@@ -179,5 +219,16 @@ function getSottotratta($var, $connessione) {
     $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
     return $result;
+}
+
+function posizioneTreno($treno, $connessione)
+{
+    $query = "SELECT stazione FROM treno WHERE id = ?";
+    $stmt = $connessione->prepare($query);
+    $stmt->bind_param("s", $treno);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+    return $result[0]["stazione"];
 }
 ?>

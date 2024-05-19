@@ -7,7 +7,7 @@ body {
     min-height: 100vh;
     width: 99%;
     max-width: 99%;
-
+    
 
 }
 
@@ -41,6 +41,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 table {
@@ -131,14 +132,25 @@ table {
     max-width: 25%;
 }
 
-.freccia_giu{
+.img_stato{
   width: fit-content;
   max-width: 100%;
   width: 100%;
-  /*mantieni sempe le proprorzioni originali delll'immagine*/
   height: auto;
+}
 
+#back{
+  position: absolute;
+  width: 3%;
+  height: 3%;
+  top: 2%;
+  left: 2%;
+}
 
+#img_back{
+  width: 100%;
+  height: auto;
+  max-width: max-content;
 }
 
 

@@ -1,4 +1,4 @@
--- Active: 1707411005403@@127.0.0.1@3306@gestione_treni
+-- Active: 1710091988140@@127.0.0.1@3306@gestione_treni
 
 -- trovare i ritardi di un treno partendo da ritardo
 
@@ -52,4 +52,7 @@ SELECT s.id, orario_partenza, orario_arrivo, s.prima_stazione AS '1staz', s.ulti
 LEFT JOIN tratta t ON s.tratta = t.id
 WHERE s.tratta = (SELECT tratta FROM treno WHERE id = "EXP002")
 AND s.prima_stazione = t.prima_stazione
+
+
+
 

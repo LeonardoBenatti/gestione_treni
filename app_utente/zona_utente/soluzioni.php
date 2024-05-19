@@ -1,3 +1,27 @@
+<?php 
+session_start();
+
+if(isset($_POST["partenza"])){
+    $_SESSION["partenza"] = $_POST["partenza"];
+    $partenza = $_SESSION["partenza"];
+}
+
+if(isset($_POST["destinazione"])){
+    $_SESSION["destinazione"] = $_POST["destinazione"];
+}
+
+if(isset($_SESSION["partenza"])){
+    $partenza = $_SESSION["partenza"];
+}
+
+if(isset($_SESSION["destinazione"])){
+    $destinazione = $_SESSION["destinazione"];
+}
+
+echo $partenza . "<br>";
+echo $destinazione . "<br>";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +33,10 @@
 <body>
     <div class = "blur-overlay"></div>
     <div id = "container">
-        <h1 id = "titolo">Soluzioni da <?php echo $_POST["partenza"]; ?> a <?php echo $_POST["destinazione"]; ?></h1>
+        <h1 id = "titolo">Soluzioni da <?php echo $partenza; ?> a <?php echo $destinazione; ?></h1>
 
         <div id = "soluzioni">
 <?php
-    session_start();
 
     $hostname = "localhost";
     $username = "root";
@@ -33,18 +56,18 @@
     )";
 
     $stmt = $connessione->prepare($query_tratta);
-    $stmt->bind_param("ss", $_POST['partenza'], $_POST['destinazione']);
+    $stmt->bind_param("ss", $partenza, $_POST['destinazione']);
     $stmt->execute();
     $result_tratta = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-    //echo $_POST["partenza"] . "<br>";
-    //echo $_POST["destinazione"] . "<br>";
+    //echo $partenza . "<br>";
+    //echo $destinazione . "<br>";
 
     foreach($result_tratta as $row){
         //var_dump($row);
         //echo "tratta selezionata: " . $row["id"] . "<br>";
 
-        $partenza = getStaz($_POST['partenza'], $connessione);
+        $partenza_id = getStaz($partenza, $connessione);
         $tratta = $row["id"];
 
         $query_partenza = "SELECT * FROM sottotratta 
@@ -52,7 +75,7 @@
                             AND tratta = ?";
 
         $stmt = $connessione->prepare($query_partenza);
-        $stmt->bind_param("ii", $partenza, $tratta);
+        $stmt->bind_param("ii", $partenza_id, $tratta);
         $stmt->execute();
         $result_partenza = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
@@ -101,7 +124,7 @@
 
             echo "<input type='hidden' name = 'tratta' value = '" . $tratta . "'>";
             echo "<input type='hidden' name = 'partenza' value = '" . $_POST["partenza"] . "'>";
-            echo "<input type='hidden' name = 'destinazione' value = '" . $_POST["destinazione"] . "'>";
+            echo "<input type='hidden' name = 'destinazione' value = '" . $destinazione . "'>";
             echo "<input type='hidden' name = 'prima_sottotratta' value = '" . $sottottratta["id"] . "'>";   
             foreach($tratte_utili as $tratta_utile){
                 echo "<input type='hidden' name = 'tratte_utili[]' value = '" . $tratta_utile["id"] . "'>";
