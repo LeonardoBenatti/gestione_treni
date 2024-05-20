@@ -18,8 +18,8 @@ if(isset($_SESSION["destinazione"])){
     $destinazione = $_SESSION["destinazione"];
 }
 
-echo $partenza . "<br>";
-echo $destinazione . "<br>";
+//echo $partenza . "<br>";
+//echo $destinazione . "<br>";
 ?>
 
 <!DOCTYPE html>
@@ -81,10 +81,12 @@ echo $destinazione . "<br>";
 
         foreach($result_partenza as $sottottratta){
 
+            echo "<div class = 'soluzione_row'>";
+
             $prox = $sottottratta["id"];
             $ultima_stazione = $sottottratta["ultima_stazione"];
 
-        echo "<form action='tratta.php' method='post'>";
+            echo "<form action='tratta.php' method='post'>";
             
             echo "<button type='submit' name = 'tratta'>";
 
@@ -107,30 +109,40 @@ echo $destinazione . "<br>";
                 array_push($tratte_utili, $result_sottotratta[0]);
 
 
-                if(getStaz($result_sottotratta[0]["prima_stazione"], $connessione) == $_POST['partenza'] ){
-                    echo $_POST['partenza']. " " . $result_sottotratta[0]["orario_partenza"];
+                if(getStaz($result_sottotratta[0]["prima_stazione"], $connessione) == $partenza ){
+                    echo $partenza. " " . $result_sottotratta[0]["orario_partenza"];
                 }
                 
-                if(getStaz($result_sottotratta[0]["ultima_stazione"], $connessione) == $_POST['destinazione'] ){
-                    echo " - " . $_POST['destinazione']. " " . $result_sottotratta[0]["orario_arrivo"] . "<br>";
+                if(getStaz($result_sottotratta[0]["ultima_stazione"], $connessione) == $destinazione ){
+                    echo " - " . $destinazione . " " . $result_sottotratta[0]["orario_arrivo"] . "<br>";
                 }
                 
                 $ultima_stazione = $result_sottotratta[0]["ultima_stazione"];
                 $prox = $result_sottotratta[0]["sottotratta_successiva"];
                 //echo "ulti_staz: " . getStaz($ultima_stazione, $connessione) . "<br>";
-            }while(getStaz($ultima_stazione, $connessione) != $_POST['destinazione']);
+            }while(getStaz($ultima_stazione, $connessione) != $destinazione);
 
             echo "</button>";
 
             echo "<input type='hidden' name = 'tratta' value = '" . $tratta . "'>";
-            echo "<input type='hidden' name = 'partenza' value = '" . $_POST["partenza"] . "'>";
+            echo "<input type='hidden' name = 'partenza' value = '" . $partenza . "'>";
             echo "<input type='hidden' name = 'destinazione' value = '" . $destinazione . "'>";
             echo "<input type='hidden' name = 'prima_sottotratta' value = '" . $sottottratta["id"] . "'>";   
             foreach($tratte_utili as $tratta_utile){
                 echo "<input type='hidden' name = 'tratte_utili[]' value = '" . $tratta_utile["id"] . "'>";
             }
-        
-        echo "</form>";
+
+            echo "</form>";
+
+            echo "<form class = 'ticket_button' action='acquisto.php' method='post'>";
+
+            echo "<button id = 'acquista' type='submit' name = 'tratta'>Acquista \n Biglietto</button>";
+            echo "<input type='hidden' name = 'destinazione' value = '" . $destinazione . "'>";
+            echo "<input type='hidden' name = 'partenza' value = '" . $partenza . "'>";
+
+            echo "</form>";
+
+            echo "</div>";
 
 
         }

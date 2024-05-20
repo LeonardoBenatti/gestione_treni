@@ -78,6 +78,27 @@ button[type="submit"]:hover {
     border: 5px solid #007bff;
 }
 
+.soluzione_row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    margin: 1vh;
+    /*elementi al centro anche sull'asse y nel div*/
+
+}
+
+#acquista {
+    width: 10%;
+    margin: 1vh;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding: 2vh;
+    
+}
+
 .hidden {
     display: none;
 }
