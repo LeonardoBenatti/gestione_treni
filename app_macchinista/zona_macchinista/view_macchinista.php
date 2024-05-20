@@ -55,7 +55,9 @@
 <body>
     <div id = "orologio">
         <?php 
-        echo "SONO LE ORE: " . $_SESSION["currentTime"] . " DI " . getDayOfWeek($_SESSION["currentDate"]) . " " . getItalianDate($_SESSION["currentDate"]) . "<br>";
+        echo "<p id = 'ora'>" . $_SESSION["currentTime"] . "</p>";
+        echo "<p id = 'data'>" . getDayOfWeek($_SESSION["currentDate"]) . "<br>";
+        echo getItalianDate($_SESSION["currentDate"]) . "</p>";
         ?>
     </div>
     <div id="ritardo">
@@ -79,9 +81,9 @@
                     echo "<form action='view_macchinista.php' method='post'>";
                     if ($stazione == $_SESSION["stazione_raggiunta"]) {
 
-                        echo "<input id='stazione_raggiunta' class='stazione' name='button' type='submit' value='" . $stazione . " - Ritardo: " . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . " - Ora: " . $sottotratta['orario_partenza'] . "'> <br>";
+                        echo "<input id='stazione_raggiunta' class='stazione' name='button' type='submit' value='" . $stazione . "  -  " . $sottotratta['orario_partenza'] . "'> <br>";
                     } else {
-                        echo "<input class='stazione' name='button' type='submit' value='" . $stazione . " - Ritardo: " . getRitardo($_SESSION["treno"], $sottotratta['id'], $connessione) . " - Ora: " . $sottotratta['orario_partenza'] . "'> <br>";
+                        echo "<input class='stazione' name='button' type='submit' value='" . $stazione . "  -  " . $sottotratta['orario_partenza'] . "'> <br>";
                     }
                     echo "<input name = 'sottotratta_raggiunta' type = 'hidden' value = '" . $sottotratta['id'] . "'>";
                     echo "<input name = 'stazione_raggiunta' type = 'hidden' value = '" . $stazione . "'>";
@@ -93,7 +95,7 @@
                 $stazione = getStaz($sottotratta['ultima_stazione'], $connessione);
                 echo "<form action='view_macchinista.php' method='post'>";
                 if ($stazione == $_SESSION["stazione_raggiunta"]) {
-                    echo "<input id='stazione_raggiunta' class='stazione' name='button' type='submit' value='" . $stazione . " - " . $sottotratta['orario_partenza'] . "'> <br>";
+                    echo "<input id='stazione_raggiunta' class='stazione' name='button' type='submit' value='" . $stazione . "  -  " . $sottotratta['orario_partenza'] . "'> <br>";
                 } else {
                     echo "<input class='stazione' name='button' type='submit' value='" . $stazione . "   -   " . $sottotratta['orario_partenza'] . "'> <br>";
                 }
@@ -113,6 +115,14 @@
 //echo '<pre>' . var_export($test, true) . '</pre>'
         ?>
     </div>
+    <script>
+        //funzione che aggiorna il conenuto dell id = "ora" ogni secondo con l'orario attuale
+        setInterval(function() {
+            var ora = new Date();
+            var ora_stringa = ora.getHours().toString().padStart(2, '0') + ":" + ora.getMinutes().toString().padStart(2, '0') + ":" + ora.getSeconds().toString().padStart(2, '0');
+            document.getElementById("ora").innerHTML = ora_stringa;
+        }, 1000);
+    </script>
 </body>
 
 </html>

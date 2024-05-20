@@ -61,6 +61,18 @@ body {
     position: absolute;
     top: 0;
     right: 0;
+    text-align: right;
+    font-size: 1.2em;
+}
+
+#orologio #ora{
+    font-size: 1.5em;
+    color: #000000;
+}
+
+#orologio #data{
+    font-size: 1em;
+    color: #000000;
 }
 
 #ritardo{
